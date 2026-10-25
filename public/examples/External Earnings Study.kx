@@ -1,0 +1,35 @@
+study({
+    name: "External Earnings Study"
+});
+
+// Import examples/sample-earnings.csv into the Data Library using the default
+// dataset name "sample-earnings" before running this Study.
+const earnings = data.dataset("sample-earnings");
+
+const surprise = earnings.eps_actual - earnings.eps_estimate;
+const revenueSurprise = earnings.revenue_actual - earnings.revenue_estimate;
+
+// Event-frequency plot: only three earnings timestamps exist in the sample.
+const earningsPane = pane.create("earnings", {
+    title: "Earnings",
+    height: 0.28
+});
+
+plot.histogram(surprise, {
+    title: "EPS Surprise",
+    pane: earningsPane
+});
+
+// Causal alignment makes each chart bar see only the latest earnings figure
+// that was already known at that bar's timestamp.
+const knownSurprise = data.align(surprise, {
+    mode: "previous"
+});
+
+plot.line(knownSurprise, {
+    title: "Latest Known EPS Surprise",
+    pane: "overlay"
+});
+
+emit("latest_eps_surprise", surprise.last);
+emit("latest_revenue_surprise", revenueSurprise.last);

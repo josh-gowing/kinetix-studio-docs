@@ -1,0 +1,9 @@
+study({
+  name: "Reusable Study Module"
+});
+
+function normalize(value, mean, deviation) {
+  return deviation == 0 ? 0 : (value - mean) / deviation;
+}
+
+export normalize;

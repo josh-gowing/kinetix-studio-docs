@@ -1,0 +1,17 @@
+study({
+  name: "Collections Study"
+});
+
+const values = [1, 2, 3, 4, 5];
+let total = 0;
+
+for (const value of values) {
+  total += value;
+}
+
+const result = map.create();
+map.set(result, "count", array.length(values));
+map.set(result, "sum", total);
+
+emit("sum", total);
+emit("count", map.get(result, "count"));

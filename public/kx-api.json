@@ -1,0 +1,3232 @@
+{
+  "language": "KX",
+  "version": "2.0",
+  "declarations": [
+    {
+      "label": "indicator",
+      "signature": "indicator({ name, dataset?, overlay? })",
+      "documentation": "Declare a reusable visual KX indicator."
+    },
+    {
+      "label": "study",
+      "signature": "study({ name, dataset?, overlay? })",
+      "documentation": "Declare a KX research study. Studies may use report.* without placing orders."
+    },
+    {
+      "label": "strategy",
+      "signature": "strategy({ name, dataset, instruments?, benchmarks?, ...brokerSettings })",
+      "documentation": "Declare a deterministic KX backtest strategy using the single- or multi-asset broker runtime."
+    },
+    {
+      "label": "library",
+      "signature": "library({ name })",
+      "documentation": "Declare a reusable KX module imported with `import library Alias from \"Libraries/Name\"`."
+    }
+  ],
+  "globals": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "time",
+    "na",
+    "bar.index",
+    "bar.isFirst",
+    "bar.isLast",
+    "bar.isRealtime",
+    "bar.isClosed",
+    "instrument.symbol",
+    "instrument.exchange",
+    "instrument.currency",
+    "instrument.assetClass",
+    "instrument.tickSize",
+    "instrument.pointValue",
+    "instrument.session",
+    "instrument.timezone",
+    "chart.symbol",
+    "chart.timeframe",
+    "chart.loadedRange",
+    "chart.visibleRange"
+  ],
+  "globalItems": [
+    {
+      "label": "isNa",
+      "insertText": "isNa(${1:value})",
+      "detail": "isNa(value)",
+      "documentation": "Return true for `na`/missing scalar or Series values.",
+      "kind": "function"
+    },
+    {
+      "label": "nz",
+      "insertText": "nz(${1:value}, ${2:replacement})",
+      "detail": "nz(value, replacement)",
+      "documentation": "Replace `na`/missing scalar or Series values with a fallback (default 0).",
+      "kind": "function"
+    },
+    {
+      "label": "emit",
+      "insertText": "emit(\"${1:name}\", ${2:value})",
+      "detail": "emit(name, value)",
+      "documentation": "Emit a named scalar or numeric Series result from a KX Study/Indicator for host inspection.",
+      "kind": "function"
+    }
+  ],
+  "namespaces": {
+    "ta": [
+      {
+        "label": "ta.sma",
+        "insertText": "ta.sma(${1:series}, ${2:length})",
+        "detail": "ta.sma(series, length)",
+        "documentation": "Simple moving average.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.ema",
+        "insertText": "ta.ema(${1:series}, ${2:length})",
+        "detail": "ta.ema(series, length)",
+        "documentation": "Exponential moving average.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.wma",
+        "insertText": "ta.wma(${1:series}, ${2:length})",
+        "detail": "ta.wma(series, length)",
+        "documentation": "Weighted moving average.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.rma",
+        "insertText": "ta.rma(${1:series}, ${2:length})",
+        "detail": "ta.rma(series, length)",
+        "documentation": "Wilder/RMA moving average.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.vwma",
+        "insertText": "ta.vwma(${1:series}, ${2:length})",
+        "detail": "ta.vwma(series, length)",
+        "documentation": "Volume-weighted moving average.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.rsi",
+        "insertText": "ta.rsi(${1:series}, ${2:length})",
+        "detail": "ta.rsi(series, length)",
+        "documentation": "Relative Strength Index.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.macd",
+        "insertText": "ta.macd(${1:series}, ${2:12}, ${3:26}, ${4:9})",
+        "detail": "ta.macd(series, 12, 26, 9)",
+        "documentation": "MACD tuple.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.atr",
+        "insertText": "ta.atr(${1:14})",
+        "detail": "ta.atr(14)",
+        "documentation": "Average True Range.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.tr",
+        "insertText": "ta.tr()",
+        "detail": "ta.tr()",
+        "documentation": "True range series.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.adx",
+        "insertText": "ta.adx(${1:14})",
+        "detail": "ta.adx(14)",
+        "documentation": "Average Directional Index.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.stdev",
+        "insertText": "ta.stdev(${1:series}, ${2:length})",
+        "detail": "ta.stdev(series, length)",
+        "documentation": "Rolling standard deviation.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.variance",
+        "insertText": "ta.variance(${1:series}, ${2:length})",
+        "detail": "ta.variance(series, length)",
+        "documentation": "Rolling variance.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.correlation",
+        "insertText": "ta.correlation(${1:a}, ${2:b}, ${3:length})",
+        "detail": "ta.correlation(a, b, length)",
+        "documentation": "Rolling Pearson correlation.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.covariance",
+        "insertText": "ta.covariance(${1:a}, ${2:b}, ${3:length})",
+        "detail": "ta.covariance(a, b, length)",
+        "documentation": "Rolling covariance.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.highest",
+        "insertText": "ta.highest(${1:series}, ${2:length})",
+        "detail": "ta.highest(series, length)",
+        "documentation": "Rolling highest value.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.lowest",
+        "insertText": "ta.lowest(${1:series}, ${2:length})",
+        "detail": "ta.lowest(series, length)",
+        "documentation": "Rolling lowest value.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.highestBars",
+        "insertText": "ta.highestBars(${1:series}, ${2:length})",
+        "detail": "ta.highestBars(series, length)",
+        "documentation": "Bars since rolling highest.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.lowestBars",
+        "insertText": "ta.lowestBars(${1:series}, ${2:length})",
+        "detail": "ta.lowestBars(series, length)",
+        "documentation": "Bars since rolling lowest.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.change",
+        "insertText": "ta.change(${1:series}, ${2:1})",
+        "detail": "ta.change(series, 1)",
+        "documentation": "Difference from N bars ago.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.returns",
+        "insertText": "ta.returns(${1:series}, ${2:1})",
+        "detail": "ta.returns(series, 1)",
+        "documentation": "Decimal simple return from N observations ago.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.logReturns",
+        "insertText": "ta.logReturns(${1:series}, ${2:1})",
+        "detail": "ta.logReturns(series, 1)",
+        "documentation": "Natural-log return from N observations ago.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.bbands",
+        "insertText": "ta.bbands(${1:series}, ${2:20}, ${3:2})",
+        "detail": "ta.bbands(series, 20, 2)",
+        "documentation": "Bollinger Bands object with basis, upper and lower Series.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.obv",
+        "insertText": "ta.obv(${1:price}, ${2:volume})",
+        "detail": "ta.obv(price, volume)",
+        "documentation": "On-Balance Volume.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.roc",
+        "insertText": "ta.roc(${1:series}, ${2:length})",
+        "detail": "ta.roc(series, length)",
+        "documentation": "Rate of change.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.momentum",
+        "insertText": "ta.momentum(${1:series}, ${2:length})",
+        "detail": "ta.momentum(series, length)",
+        "documentation": "Momentum over N bars.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.crossover",
+        "insertText": "ta.crossover(${1:a}, ${2:b})",
+        "detail": "ta.crossover(a, b)",
+        "documentation": "True where A crosses over B.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.crossunder",
+        "insertText": "ta.crossunder(${1:a}, ${2:b})",
+        "detail": "ta.crossunder(a, b)",
+        "documentation": "True where A crosses under B.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.barssince",
+        "insertText": "ta.barssince(${1:condition})",
+        "detail": "ta.barssince(condition)",
+        "documentation": "Bars since condition was true.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.valuewhen",
+        "insertText": "ta.valuewhen(${1:condition}, ${2:value}, ${3:occurrence})",
+        "detail": "ta.valuewhen(condition, value, occurrence)",
+        "documentation": "Value when a condition occurred.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.percentile",
+        "insertText": "ta.percentile(${1:series}, ${2:length}, ${3:percentile})",
+        "detail": "ta.percentile(series, length, percentile)",
+        "documentation": "Rolling percentile.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.percentRank",
+        "insertText": "ta.percentRank(${1:series}, ${2:length})",
+        "detail": "ta.percentRank(series, length)",
+        "documentation": "Rolling percentile rank.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.linreg",
+        "insertText": "ta.linreg(${1:series}, ${2:length})",
+        "detail": "ta.linreg(series, length)",
+        "documentation": "Rolling linear regression value.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.zscore",
+        "insertText": "ta.zscore(${1:series}, ${2:length})",
+        "detail": "ta.zscore(series, length)",
+        "documentation": "Rolling Z-score.",
+        "kind": "function"
+      },
+      {
+        "label": "ta.vwap",
+        "insertText": "ta.vwap(${1:price}, ${2:volume})",
+        "detail": "ta.vwap(price, volume)",
+        "documentation": "Volume-weighted average price.",
+        "kind": "function"
+      }
+    ],
+    "stats": [
+      {
+        "label": "stats.mean",
+        "insertText": "stats.mean(${1:values})",
+        "detail": "stats.mean(values)",
+        "documentation": "Arithmetic mean.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.sum",
+        "insertText": "stats.sum(${1:values})",
+        "detail": "stats.sum(values)",
+        "documentation": "Sum numeric values.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.min",
+        "insertText": "stats.min(${1:values})",
+        "detail": "stats.min(values)",
+        "documentation": "Minimum numeric value.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.max",
+        "insertText": "stats.max(${1:values})",
+        "detail": "stats.max(values)",
+        "documentation": "Maximum numeric value.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.count",
+        "insertText": "stats.count(${1:values})",
+        "detail": "stats.count(values)",
+        "documentation": "Count finite numeric observations.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.median",
+        "insertText": "stats.median(${1:values})",
+        "detail": "stats.median(values)",
+        "documentation": "Median.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.mode",
+        "insertText": "stats.mode(${1:values})",
+        "detail": "stats.mode(values)",
+        "documentation": "Mode.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.variance",
+        "insertText": "stats.variance(${1:values})",
+        "detail": "stats.variance(values)",
+        "documentation": "Variance.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.stdev",
+        "insertText": "stats.stdev(${1:values})",
+        "detail": "stats.stdev(values)",
+        "documentation": "Standard deviation.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.correlation",
+        "insertText": "stats.correlation(${1:a}, ${2:b})",
+        "detail": "stats.correlation(a, b)",
+        "documentation": "Pearson correlation.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.covariance",
+        "insertText": "stats.covariance(${1:a}, ${2:b})",
+        "detail": "stats.covariance(a, b)",
+        "documentation": "Covariance.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.percentile",
+        "insertText": "stats.percentile(${1:values}, ${2:p})",
+        "detail": "stats.percentile(values, p)",
+        "documentation": "Percentile.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.quantile",
+        "insertText": "stats.quantile(${1:values}, ${2:q})",
+        "detail": "stats.quantile(values, q)",
+        "documentation": "Quantile.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.rank",
+        "insertText": "stats.rank(${1:value}, ${2:values}, \"${3:desc}\")",
+        "detail": "stats.rank(value, values, \"desc\")",
+        "documentation": "Cross-sectional rank; tied values receive their average rank.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.percentileRank",
+        "insertText": "stats.percentileRank(${1:value}, ${2:values})",
+        "detail": "stats.percentileRank(value, values)",
+        "documentation": "Cross-sectional percentile rank from 0 to 100.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.skewness",
+        "insertText": "stats.skewness(${1:values})",
+        "detail": "stats.skewness(values)",
+        "documentation": "Sample skewness.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.kurtosis",
+        "insertText": "stats.kurtosis(${1:values})",
+        "detail": "stats.kurtosis(values)",
+        "documentation": "Sample kurtosis.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.zscore",
+        "insertText": "stats.zscore(${1:value}, ${2:values})",
+        "detail": "stats.zscore(value, values)",
+        "documentation": "Z-score.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.linearRegression",
+        "insertText": "stats.linearRegression(${1:x}, ${2:y})",
+        "detail": "stats.linearRegression(x, y)",
+        "documentation": "Linear regression summary.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.ols",
+        "insertText": "stats.ols(${1:y}, ${2:x})",
+        "detail": "stats.ols(y, x)",
+        "documentation": "Ordinary least squares regression.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.beta",
+        "insertText": "stats.beta(${1:asset}, ${2:benchmark})",
+        "detail": "stats.beta(asset, benchmark)",
+        "documentation": "Market beta.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.alpha",
+        "insertText": "stats.alpha(${1:asset}, ${2:benchmark})",
+        "detail": "stats.alpha(asset, benchmark)",
+        "documentation": "Regression alpha.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.sharpe",
+        "insertText": "stats.sharpe(${1:returns})",
+        "detail": "stats.sharpe(returns)",
+        "documentation": "Sharpe ratio.",
+        "kind": "function"
+      },
+      {
+        "label": "stats.sortino",
+        "insertText": "stats.sortino(${1:returns})",
+        "detail": "stats.sortino(returns)",
+        "documentation": "Sortino ratio.",
+        "kind": "function"
+      }
+    ],
+    "math": [
+      {
+        "label": "math.abs",
+        "insertText": "math.abs(${1:value})",
+        "detail": "math.abs(value)",
+        "documentation": "Absolute value.",
+        "kind": "function"
+      },
+      {
+        "label": "math.min",
+        "insertText": "math.min(${1:a}, ${2:b})",
+        "detail": "math.min(a, b)",
+        "documentation": "Minimum.",
+        "kind": "function"
+      },
+      {
+        "label": "math.max",
+        "insertText": "math.max(${1:a}, ${2:b})",
+        "detail": "math.max(a, b)",
+        "documentation": "Maximum.",
+        "kind": "function"
+      },
+      {
+        "label": "math.clamp",
+        "insertText": "math.clamp(${1:value}, ${2:min}, ${3:max})",
+        "detail": "math.clamp(value, min, max)",
+        "documentation": "Clamp a value.",
+        "kind": "function"
+      },
+      {
+        "label": "math.pow",
+        "insertText": "math.pow(${1:value}, ${2:power})",
+        "detail": "math.pow(value, power)",
+        "documentation": "Raise to a power.",
+        "kind": "function"
+      },
+      {
+        "label": "math.sqrt",
+        "insertText": "math.sqrt(${1:value})",
+        "detail": "math.sqrt(value)",
+        "documentation": "Square root.",
+        "kind": "function"
+      },
+      {
+        "label": "math.log",
+        "insertText": "math.log(${1:value})",
+        "detail": "math.log(value)",
+        "documentation": "Natural logarithm.",
+        "kind": "function"
+      },
+      {
+        "label": "math.log10",
+        "insertText": "math.log10(${1:value})",
+        "detail": "math.log10(value)",
+        "documentation": "Base-10 logarithm.",
+        "kind": "function"
+      },
+      {
+        "label": "math.exp",
+        "insertText": "math.exp(${1:value})",
+        "detail": "math.exp(value)",
+        "documentation": "Exponential.",
+        "kind": "function"
+      },
+      {
+        "label": "math.round",
+        "insertText": "math.round(${1:value})",
+        "detail": "math.round(value)",
+        "documentation": "Round.",
+        "kind": "function"
+      },
+      {
+        "label": "math.floor",
+        "insertText": "math.floor(${1:value})",
+        "detail": "math.floor(value)",
+        "documentation": "Floor.",
+        "kind": "function"
+      },
+      {
+        "label": "math.ceil",
+        "insertText": "math.ceil(${1:value})",
+        "detail": "math.ceil(value)",
+        "documentation": "Ceiling.",
+        "kind": "function"
+      },
+      {
+        "label": "math.sin",
+        "insertText": "math.sin(${1:value})",
+        "detail": "math.sin(value)",
+        "documentation": "Sine.",
+        "kind": "function"
+      },
+      {
+        "label": "math.cos",
+        "insertText": "math.cos(${1:value})",
+        "detail": "math.cos(value)",
+        "documentation": "Cosine.",
+        "kind": "function"
+      },
+      {
+        "label": "math.tan",
+        "insertText": "math.tan(${1:value})",
+        "detail": "math.tan(value)",
+        "documentation": "Tangent.",
+        "kind": "function"
+      },
+      {
+        "label": "math.sum",
+        "insertText": "math.sum(${1:values})",
+        "detail": "math.sum(values)",
+        "documentation": "Sum values.",
+        "kind": "function"
+      },
+      {
+        "label": "math.mean",
+        "insertText": "math.mean(${1:values})",
+        "detail": "math.mean(values)",
+        "documentation": "Mean values.",
+        "kind": "function"
+      },
+      {
+        "label": "math.median",
+        "insertText": "math.median(${1:values})",
+        "detail": "math.median(values)",
+        "documentation": "Median values.",
+        "kind": "function"
+      }
+    ],
+    "data": [
+      {
+        "label": "data.current",
+        "insertText": "data.current()",
+        "detail": "data.current()",
+        "documentation": "Current OHLCV chart dataset.",
+        "kind": "function"
+      },
+      {
+        "label": "data.security",
+        "insertText": "data.security(\"${1:CME:NQH6}\", { timeframe: \"${2:5m}\" })",
+        "detail": "data.security(\"CME:NQH6\", { timeframe: \"5m\" )",
+        "documentation": "Request another market instrument. Without an explicit range it follows the chart's loaded range.",
+        "kind": "function"
+      },
+      {
+        "label": "data.market",
+        "insertText": "data.market(\"${1:dataset_name}\")",
+        "detail": "data.market(\"dataset_name\")",
+        "documentation": "Load a named OHLCV Data Library dataset and causally align it to the current script clock. Useful for portfolio strategies because the same dataset reference can route orders.",
+        "kind": "function"
+      },
+      {
+        "label": "data.dataset",
+        "insertText": "data.dataset(\"${1:Earnings}\", { timeline: \"${2:availability}\", delay: \"${3:0d}\" })",
+        "detail": "data.dataset(\"Earnings\", { timeline: \"availability\", delay: \"0d\" )",
+        "documentation": "Load any imported dataset by id/name. Configured availability-time is the default causal timeline. For date-only observations without publication time, an explicit positive delay (for example 1d) provides a conservative availability assumption; otherwise KX warns that raw event time may not be point-in-time safe.",
+        "kind": "function"
+      },
+      {
+        "label": "data.available",
+        "insertText": "data.available(\"${1:Earnings}\")",
+        "detail": "data.available(\"Earnings\")",
+        "documentation": "Check whether a named imported dataset exists.",
+        "kind": "function"
+      },
+      {
+        "label": "data.list",
+        "insertText": "data.list({ kind: \"${1:ohlcv}\", timeframe: \"${2:1D}\", field: \"${3:id}\" })",
+        "detail": "data.list({ kind: \"ohlcv\", timeframe: \"1D\", field: \"id\" )",
+        "documentation": "List Data Library datasets by generic metadata filters. Returns ids by default; field can be id, name, symbol or summary.",
+        "kind": "function"
+      },
+      {
+        "label": "data.align",
+        "insertText": "data.align(${1:seriesOrDataset}, { mode: \"${2:previous}\" })",
+        "detail": "data.align(seriesOrDataset, { mode: \"previous\" )",
+        "documentation": "Align timestamped data to the active chart timeline. previous/exact are no-lookahead.",
+        "kind": "function"
+      },
+      {
+        "label": "data.filter",
+        "insertText": "data.filter(${1:dataset}, { from: \"${2:2025-01-01}\", to: \"${3:2026-01-01}\" })",
+        "detail": "data.filter(dataset, { from: \"2025-01-01\", to: \"2026-01-01\" )",
+        "documentation": "Filter a timestamped dataset by time and optional column comparisons.",
+        "kind": "function"
+      },
+      {
+        "label": "data.resample",
+        "insertText": "data.resample(${1:seriesOrDataset}, \"${2:1h}\", { method: \"${3:last}\" })",
+        "detail": "data.resample(seriesOrDataset, \"1h\", { method: \"last\" )",
+        "documentation": "Resample timestamped data. OHLCV fields use open/high/low/close/volume-aware aggregation.",
+        "kind": "function"
+      },
+      {
+        "label": "data.join",
+        "insertText": "data.join(${1:left}, ${2:right}, { mode: \"${3:previous}\", prefix: \"${4:right_}\" })",
+        "detail": "data.join(left, right, { mode: \"previous\", prefix: \"right_\" )",
+        "documentation": "Join right-side timestamped columns onto the left dataset timeline with causal alignment by default.",
+        "kind": "function"
+      }
+    ],
+    "series": [
+      {
+        "label": "series.shift",
+        "insertText": "series.shift(${1:values}, ${2:1})",
+        "detail": "series.shift(values, 1)",
+        "documentation": "Shift a series by N bars.",
+        "kind": "function"
+      },
+      {
+        "label": "series.fill",
+        "insertText": "series.fill(${1:values}, ${2:value})",
+        "detail": "series.fill(values, value)",
+        "documentation": "Fill missing values.",
+        "kind": "function"
+      },
+      {
+        "label": "series.replaceNa",
+        "insertText": "series.replaceNa(${1:values}, ${2:value})",
+        "detail": "series.replaceNa(values, value)",
+        "documentation": "Replace missing values.",
+        "kind": "function"
+      },
+      {
+        "label": "series.isNa",
+        "insertText": "series.isNa(${1:value})",
+        "detail": "series.isNa(value)",
+        "documentation": "Check for a missing value.",
+        "kind": "function"
+      },
+      {
+        "label": "series.first",
+        "insertText": "series.first(${1:values})",
+        "detail": "series.first(values)",
+        "documentation": "First non-missing value.",
+        "kind": "function"
+      },
+      {
+        "label": "series.last",
+        "insertText": "series.last(${1:values})",
+        "detail": "series.last(values)",
+        "documentation": "Latest value.",
+        "kind": "function"
+      },
+      {
+        "label": "series.cumsum",
+        "insertText": "series.cumsum(${1:values})",
+        "detail": "series.cumsum(values)",
+        "documentation": "Cumulative sum.",
+        "kind": "function"
+      },
+      {
+        "label": "series.normalize",
+        "insertText": "series.normalize(${1:values})",
+        "detail": "series.normalize(values)",
+        "documentation": "Normalize a series.",
+        "kind": "function"
+      },
+      {
+        "label": "series.diff",
+        "insertText": "series.diff(${1:values}, ${2:1})",
+        "detail": "series.diff(values, 1)",
+        "documentation": "Difference from N observations ago.",
+        "kind": "function"
+      },
+      {
+        "label": "series.pctChange",
+        "insertText": "series.pctChange(${1:values}, ${2:1})",
+        "detail": "series.pctChange(values, 1)",
+        "documentation": "Decimal percentage change from N observations ago.",
+        "kind": "function"
+      },
+      {
+        "label": "series.logReturn",
+        "insertText": "series.logReturn(${1:values}, ${2:1})",
+        "detail": "series.logReturn(values, 1)",
+        "documentation": "Natural-log return from N observations ago.",
+        "kind": "function"
+      },
+      {
+        "label": "series.changed",
+        "insertText": "series.changed(${1:values})",
+        "detail": "series.changed(values)",
+        "documentation": "Boolean Series true when the current non-missing value differs from the previous observation; useful for detecting newly available events after causal alignment.",
+        "kind": "function"
+      }
+    ],
+    "report": [
+      {
+        "label": "report.metric",
+        "insertText": "report.metric(\"${1:Metric}\", ${2:value}, { format: \"${3:number}\" })",
+        "detail": "report.metric(\"Metric\", value, { format: \"number\" )",
+        "documentation": "Add a scalar metric to the Research Report.",
+        "kind": "function"
+      },
+      {
+        "label": "report.table",
+        "insertText": "report.table(\"${1:Table}\", [\"${2:Column A}\", \"${3:Column B}\"], ${4:rows})",
+        "detail": "report.table(\"Table\", [\"Column A\", \"Column B\"], rows)",
+        "documentation": "Add a table to the Research Report.",
+        "kind": "function"
+      },
+      {
+        "label": "report.line",
+        "insertText": "report.line(\"${1:Series}\", ${2:series})",
+        "detail": "report.line(\"Series\", series)",
+        "documentation": "Add a numeric series line chart to the Research Report.",
+        "kind": "function"
+      },
+      {
+        "label": "report.histogram",
+        "insertText": "report.histogram(\"${1:Distribution}\", ${2:series})",
+        "detail": "report.histogram(\"Distribution\", series)",
+        "documentation": "Add a numeric histogram series to the Research Report.",
+        "kind": "function"
+      }
+    ],
+    "input": [
+      {
+        "label": "input.int",
+        "insertText": "input.int(\"${1:Length}\", ${2:20}, { min: ${3:1} })",
+        "detail": "input.int(\"Length\", 20, { min: 1 )",
+        "documentation": "Integer setting rendered in the KX Studio properties UI.",
+        "kind": "function"
+      },
+      {
+        "label": "input.float",
+        "insertText": "input.float(\"${1:Value}\", ${2:1.0})",
+        "detail": "input.float(\"Value\", 1.0)",
+        "documentation": "Floating-point setting.",
+        "kind": "function"
+      },
+      {
+        "label": "input.bool",
+        "insertText": "input.bool(\"${1:Enabled}\", ${2:true})",
+        "detail": "input.bool(\"Enabled\", true)",
+        "documentation": "Boolean setting.",
+        "kind": "function"
+      },
+      {
+        "label": "input.string",
+        "insertText": "input.string(\"${1:Text}\", \"${2:value}\")",
+        "detail": "input.string(\"Text\", \"value\")",
+        "documentation": "String setting.",
+        "kind": "function"
+      },
+      {
+        "label": "input.enum",
+        "insertText": "input.enum(\"${1:Mode}\", ${2:options})",
+        "detail": "input.enum(\"Mode\", options)",
+        "documentation": "Enum/dropdown setting.",
+        "kind": "function"
+      },
+      {
+        "label": "input.symbol",
+        "insertText": "input.symbol(\"${1:Symbol}\", \"${2:CME:ESH6}\")",
+        "detail": "input.symbol(\"Symbol\", \"CME:ESH6\")",
+        "documentation": "Instrument picker.",
+        "kind": "function"
+      },
+      {
+        "label": "input.timeframe",
+        "insertText": "input.timeframe(\"${1:Timeframe}\", \"${2:5m}\")",
+        "detail": "input.timeframe(\"Timeframe\", \"5m\")",
+        "documentation": "Timeframe picker.",
+        "kind": "function"
+      },
+      {
+        "label": "input.date",
+        "insertText": "input.date(\"${1:Date}\", \"${2:2026-01-01}\")",
+        "detail": "input.date(\"Date\", \"2026-01-01\")",
+        "documentation": "Date picker.",
+        "kind": "function"
+      },
+      {
+        "label": "input.dateRange",
+        "insertText": "input.dateRange(\"${1:Range}\", { from: \"${2:2026-01-01}\", to: \"${3:2026-12-31}\" })",
+        "detail": "input.dateRange(\"Range\", { from: \"2026-01-01\", to: \"2026-12-31\" )",
+        "documentation": "Date-range setting.",
+        "kind": "function"
+      },
+      {
+        "label": "input.session",
+        "insertText": "input.session(\"${1:Session}\", \"${2:09:30-16:00}\")",
+        "detail": "input.session(\"Session\", \"09:30-16:00\")",
+        "documentation": "Trading-session setting.",
+        "kind": "function"
+      }
+    ],
+    "pane": [
+      {
+        "label": "pane.create",
+        "insertText": "pane.create(\"${1:momentum}\", { title: \"${2:Momentum}\", height: ${3:0.28} })",
+        "detail": "pane.create(\"momentum\", { title: \"Momentum\", height: 0.28 )",
+        "documentation": "Create or reference a named lower chart pane.",
+        "kind": "function"
+      }
+    ],
+    "plot": [
+      {
+        "label": "plot.line",
+        "insertText": "plot.line(${1:series}, { title: \"${2:Line}\", pane: \"${3:overlay}\" })",
+        "detail": "plot.line(series, { title: \"Line\", pane: \"overlay\" )",
+        "documentation": "Render a line. pane may be overlay, new/lower, a pane name, or numeric pane index.",
+        "kind": "function"
+      },
+      {
+        "label": "plot.histogram",
+        "insertText": "plot.histogram(${1:series}, { title: \"${2:Histogram}\" })",
+        "detail": "plot.histogram(series, { title: \"Histogram\" )",
+        "documentation": "Render a histogram.",
+        "kind": "function"
+      },
+      {
+        "label": "plot.area",
+        "insertText": "plot.area(${1:series}, { title: \"${2:Area}\" })",
+        "detail": "plot.area(series, { title: \"Area\" )",
+        "documentation": "Render an area series.",
+        "kind": "function"
+      },
+      {
+        "label": "plot.baseline",
+        "insertText": "plot.baseline(${1:series}, { title: \"${2:Baseline}\" })",
+        "detail": "plot.baseline(series, { title: \"Baseline\" )",
+        "documentation": "Render a baseline series.",
+        "kind": "function"
+      },
+      {
+        "label": "plot.candles",
+        "insertText": "plot.candles(${1:dataset})",
+        "detail": "plot.candles(dataset)",
+        "documentation": "Render candles from a dataset.",
+        "kind": "function"
+      },
+      {
+        "label": "plot.bars",
+        "insertText": "plot.bars(${1:dataset})",
+        "detail": "plot.bars(dataset)",
+        "documentation": "Render OHLC bars from a dataset.",
+        "kind": "function"
+      }
+    ],
+    "draw": [
+      {
+        "label": "draw.hline",
+        "insertText": "draw.hline(${1:price}, { pane: \"${2:overlay}\" })",
+        "detail": "draw.hline(price, { pane: \"overlay\" )",
+        "documentation": "Horizontal price line on any chart pane.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.vline",
+        "insertText": "draw.vline(${1:time}, { pane: \"${2:overlay}\" })",
+        "detail": "draw.vline(time, { pane: \"overlay\" )",
+        "documentation": "Vertical time line.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.line",
+        "insertText": "draw.line(${1:time1}, ${2:price1}, ${3:time2}, ${4:price2}, { color: \"${5:#888}\" })",
+        "detail": "draw.line(time1, price1, time2, price2, { color: \"#888\" )",
+        "documentation": "Finite point-to-point line.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.ray",
+        "insertText": "draw.ray(${1:time1}, ${2:price1}, ${3:time2}, ${4:price2})",
+        "detail": "draw.ray(time1, price1, time2, price2)",
+        "documentation": "Ray extending through the second point.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.arrow",
+        "insertText": "draw.arrow(${1:time}, ${2:price}, \"${3:up}\", { text: \"${4:Signal}\" })",
+        "detail": "draw.arrow(time, price, \"up\", { text: \"Signal\" )",
+        "documentation": "Directional up/down arrow marker.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.marker",
+        "insertText": "draw.marker(${1:time}, ${2:price}, { shape: \"${3:circle}\" })",
+        "detail": "draw.marker(time, price, { shape: \"circle\" )",
+        "documentation": "Point marker (circle, square, diamond, triangle).",
+        "kind": "function"
+      },
+      {
+        "label": "draw.label",
+        "insertText": "draw.label(${1:time}, ${2:price}, \"${3:Label}\")",
+        "detail": "draw.label(time, price, \"Label\")",
+        "documentation": "Boxed chart label.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.text",
+        "insertText": "draw.text(${1:time}, ${2:price}, \"${3:Text}\")",
+        "detail": "draw.text(time, price, \"Text\")",
+        "documentation": "Unboxed chart text.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.box",
+        "insertText": "draw.box(${1:leftTime}, ${2:top}, ${3:rightTime}, ${4:bottom})",
+        "detail": "draw.box(leftTime, top, rightTime, bottom)",
+        "documentation": "Rectangle defined by time/price corners.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.rect",
+        "insertText": "draw.rect(${1:leftTime}, ${2:top}, ${3:rightTime}, ${4:bottom})",
+        "detail": "draw.rect(leftTime, top, rightTime, bottom)",
+        "documentation": "Rectangle alias for draw.box.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.zone",
+        "insertText": "draw.zone(${1:leftTime}, ${2:top}, ${3:rightTime}, ${4:bottom}, { fill: \"${5:#55555533}\" })",
+        "detail": "draw.zone(leftTime, top, rightTime, bottom, { fill: \"#55555533\" )",
+        "documentation": "Shaded analysis zone.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.polyline",
+        "insertText": "draw.polyline(${1:points}, { width: ${2:2} })",
+        "detail": "draw.polyline(points, { width: 2 )",
+        "documentation": "Polyline through [{time, price}, ...] points.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.channel",
+        "insertText": "draw.channel({ from: ${1:a}, to: ${2:b}, width: ${3:1.0} })",
+        "detail": "draw.channel({ from: a, to: b, width: 1.0 )",
+        "documentation": "Parallel analysis channel.",
+        "kind": "function"
+      },
+      {
+        "label": "draw.fib",
+        "insertText": "draw.fib({ from: ${1:a}, to: ${2:b} })",
+        "detail": "draw.fib({ from: a, to: b )",
+        "documentation": "Fibonacci retracement levels.",
+        "kind": "function"
+      }
+    ],
+    "array": [
+      {
+        "label": "array.length",
+        "insertText": "array.length(${1:values})",
+        "detail": "array.length(values)",
+        "documentation": "Array length.",
+        "kind": "function"
+      },
+      {
+        "label": "array.push",
+        "insertText": "array.push(${1:values}, ${2:value})",
+        "detail": "array.push(values, value)",
+        "documentation": "Append and return new length.",
+        "kind": "function"
+      },
+      {
+        "label": "array.pop",
+        "insertText": "array.pop(${1:values})",
+        "detail": "array.pop(values)",
+        "documentation": "Remove and return final item.",
+        "kind": "function"
+      },
+      {
+        "label": "array.get",
+        "insertText": "array.get(${1:values}, ${2:index})",
+        "detail": "array.get(values, index)",
+        "documentation": "Read an item by zero-based index.",
+        "kind": "function"
+      },
+      {
+        "label": "array.set",
+        "insertText": "array.set(${1:values}, ${2:index}, ${3:value})",
+        "detail": "array.set(values, index, value)",
+        "documentation": "Set an item by zero-based index and return the array.",
+        "kind": "function"
+      },
+      {
+        "label": "array.includes",
+        "insertText": "array.includes(${1:values}, ${2:value})",
+        "detail": "array.includes(values, value)",
+        "documentation": "Check whether an array contains a value.",
+        "kind": "function"
+      },
+      {
+        "label": "array.indexOf",
+        "insertText": "array.indexOf(${1:values}, ${2:value})",
+        "detail": "array.indexOf(values, value)",
+        "documentation": "Return the first matching index or -1.",
+        "kind": "function"
+      },
+      {
+        "label": "array.first",
+        "insertText": "array.first(${1:values})",
+        "detail": "array.first(values)",
+        "documentation": "First item.",
+        "kind": "function"
+      },
+      {
+        "label": "array.last",
+        "insertText": "array.last(${1:values})",
+        "detail": "array.last(values)",
+        "documentation": "Last item.",
+        "kind": "function"
+      },
+      {
+        "label": "array.slice",
+        "insertText": "array.slice(${1:values}, ${2:start}, ${3:end})",
+        "detail": "array.slice(values, start, end)",
+        "documentation": "Array slice.",
+        "kind": "function"
+      },
+      {
+        "label": "array.concat",
+        "insertText": "array.concat(${1:a}, ${2:b})",
+        "detail": "array.concat(a, b)",
+        "documentation": "Return a concatenated array.",
+        "kind": "function"
+      },
+      {
+        "label": "array.unique",
+        "insertText": "array.unique(${1:values})",
+        "detail": "array.unique(values)",
+        "documentation": "Return values with duplicates removed while preserving first occurrence.",
+        "kind": "function"
+      },
+      {
+        "label": "array.sort",
+        "insertText": "array.sort(${1:values}, \"${2:asc}\")",
+        "detail": "array.sort(values, \"asc\")",
+        "documentation": "Return a sorted copy; direction is asc or desc.",
+        "kind": "function"
+      }
+    ],
+    "map": [
+      {
+        "label": "map.create",
+        "insertText": "map.create()",
+        "detail": "map.create()",
+        "documentation": "Create a string-keyed map.",
+        "kind": "function"
+      },
+      {
+        "label": "map.set",
+        "insertText": "map.set(${1:map}, \"${2:key}\", ${3:value})",
+        "detail": "map.set(map, \"key\", value)",
+        "documentation": "Set a map value.",
+        "kind": "function"
+      },
+      {
+        "label": "map.get",
+        "insertText": "map.get(${1:map}, \"${2:key}\")",
+        "detail": "map.get(map, \"key\")",
+        "documentation": "Get a map value.",
+        "kind": "function"
+      },
+      {
+        "label": "map.has",
+        "insertText": "map.has(${1:map}, \"${2:key}\")",
+        "detail": "map.has(map, \"key\")",
+        "documentation": "Check map key.",
+        "kind": "function"
+      },
+      {
+        "label": "map.delete",
+        "insertText": "map.delete(${1:map}, \"${2:key}\")",
+        "detail": "map.delete(map, \"key\")",
+        "documentation": "Delete a map key and return whether it existed.",
+        "kind": "function"
+      },
+      {
+        "label": "map.size",
+        "insertText": "map.size(${1:map})",
+        "detail": "map.size(map)",
+        "documentation": "Number of map keys.",
+        "kind": "function"
+      },
+      {
+        "label": "map.keys",
+        "insertText": "map.keys(${1:map})",
+        "detail": "map.keys(map)",
+        "documentation": "Return map keys.",
+        "kind": "function"
+      },
+      {
+        "label": "map.values",
+        "insertText": "map.values(${1:map})",
+        "detail": "map.values(map)",
+        "documentation": "Return map values.",
+        "kind": "function"
+      },
+      {
+        "label": "map.entries",
+        "insertText": "map.entries(${1:map})",
+        "detail": "map.entries(map)",
+        "documentation": "Return [key, value] pairs.",
+        "kind": "function"
+      }
+    ],
+    "set": [
+      {
+        "label": "set.create",
+        "insertText": "set.create(${1:values})",
+        "detail": "set.create(values)",
+        "documentation": "Create a primitive-value set represented by a unique KX array.",
+        "kind": "function"
+      },
+      {
+        "label": "set.add",
+        "insertText": "set.add(${1:set}, ${2:value})",
+        "detail": "set.add(set, value)",
+        "documentation": "Add a value if absent and return the set.",
+        "kind": "function"
+      },
+      {
+        "label": "set.has",
+        "insertText": "set.has(${1:set}, ${2:value})",
+        "detail": "set.has(set, value)",
+        "documentation": "Check set membership.",
+        "kind": "function"
+      },
+      {
+        "label": "set.delete",
+        "insertText": "set.delete(${1:set}, ${2:value})",
+        "detail": "set.delete(set, value)",
+        "documentation": "Delete a value and return whether it existed.",
+        "kind": "function"
+      },
+      {
+        "label": "set.values",
+        "insertText": "set.values(${1:set})",
+        "detail": "set.values(set)",
+        "documentation": "Return the set values.",
+        "kind": "function"
+      },
+      {
+        "label": "set.size",
+        "insertText": "set.size(${1:set})",
+        "detail": "set.size(set)",
+        "documentation": "Number of unique values.",
+        "kind": "function"
+      }
+    ],
+    "object": [
+      {
+        "label": "object.keys",
+        "insertText": "object.keys(${1:value})",
+        "detail": "object.keys(value)",
+        "documentation": "Return object keys.",
+        "kind": "function"
+      },
+      {
+        "label": "object.values",
+        "insertText": "object.values(${1:value})",
+        "detail": "object.values(value)",
+        "documentation": "Return object values.",
+        "kind": "function"
+      },
+      {
+        "label": "object.has",
+        "insertText": "object.has(${1:value}, \"${2:key}\")",
+        "detail": "object.has(value, \"key\")",
+        "documentation": "Check whether an object contains a key.",
+        "kind": "function"
+      },
+      {
+        "label": "object.merge",
+        "insertText": "object.merge(${1:left}, ${2:right})",
+        "detail": "object.merge(left, right)",
+        "documentation": "Shallow-merge two objects into a new object.",
+        "kind": "function"
+      },
+      {
+        "label": "object.typeOf",
+        "insertText": "object.typeOf(${1:value})",
+        "detail": "object.typeOf(value)",
+        "documentation": "Return KX runtime type: na, series, array, object, number, string, boolean or function.",
+        "kind": "function"
+      }
+    ],
+    "session": [
+      {
+        "label": "session.define",
+        "insertText": "session.define(\"${1:0930-1600}\", { timezone: \"${2:America/New_York}\", days: \"${3:12345}\" })",
+        "detail": "session.define(\"0930-1600\", { timezone: \"America/New_York\", days: \"12345\" )",
+        "documentation": "Define a timezone-aware session. Days use Monday=1 through Sunday=7.",
+        "kind": "function"
+      },
+      {
+        "label": "session.isOpen",
+        "insertText": "session.isOpen(${1:definition})",
+        "detail": "session.isOpen(definition)",
+        "documentation": "Boolean Series indicating bars whose opening timestamp is inside the session.",
+        "kind": "function"
+      },
+      {
+        "label": "session.isFirstBar",
+        "insertText": "session.isFirstBar(${1:definition})",
+        "detail": "session.isFirstBar(definition)",
+        "documentation": "True on the first loaded bar that enters each session.",
+        "kind": "function"
+      },
+      {
+        "label": "session.isLastBar",
+        "insertText": "session.isLastBar(${1:definition})",
+        "detail": "session.isLastBar(definition)",
+        "documentation": "True on the last loaded bar before leaving each session.",
+        "kind": "function"
+      }
+    ],
+    "time": [
+      {
+        "label": "time.year",
+        "insertText": "time.year",
+        "detail": "Series<number>",
+        "documentation": "Calendar year in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.month",
+        "insertText": "time.month",
+        "detail": "Series<number>",
+        "documentation": "Calendar month (1-12) in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.day",
+        "insertText": "time.day",
+        "detail": "Series<number>",
+        "documentation": "Day of month in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.dayOfMonth",
+        "insertText": "time.dayOfMonth",
+        "detail": "Series<number>",
+        "documentation": "Alias for day of month in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.dayOfWeek",
+        "insertText": "time.dayOfWeek",
+        "detail": "Series<number>",
+        "documentation": "Weekday, Monday=1 through Sunday=7, in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.hour",
+        "insertText": "time.hour",
+        "detail": "Series<number>",
+        "documentation": "Hour (0-23) in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.minute",
+        "insertText": "time.minute",
+        "detail": "Series<number>",
+        "documentation": "Minute in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.second",
+        "insertText": "time.second",
+        "detail": "Series<number>",
+        "documentation": "Second in instrument timezone.",
+        "kind": "value"
+      },
+      {
+        "label": "time.parts",
+        "insertText": "time.parts(\"${1:America/New_York}\")",
+        "detail": "time.parts(\"America/New_York\")",
+        "documentation": "Return timezone-specific year/month/day/dayOfWeek/hour/minute/second Series.",
+        "kind": "function"
+      },
+      {
+        "label": "time.timestamp",
+        "insertText": "time.timestamp(${1:2026}, ${2:10}, ${3:24}, ${4:9}, ${5:30}, ${6:0}, \"${7:America/New_York}\")",
+        "detail": "time.timestamp(2026, 10, 24, 9, 30, 0, \"America/New_York\")",
+        "documentation": "Create an epoch-millisecond timestamp from local calendar parts, or pass an ISO-like string and optional timezone.",
+        "kind": "function"
+      },
+      {
+        "label": "time.isBetween",
+        "insertText": "time.isBetween(${1:start}, ${2:end})",
+        "detail": "time.isBetween(start, end)",
+        "documentation": "Boolean Series for bars between two timestamps.",
+        "kind": "function"
+      },
+      {
+        "label": "time.isAfter",
+        "insertText": "time.isAfter(${1:start})",
+        "detail": "time.isAfter(start)",
+        "documentation": "Boolean Series at/after a timestamp.",
+        "kind": "function"
+      },
+      {
+        "label": "time.isBefore",
+        "insertText": "time.isBefore(${1:end})",
+        "detail": "time.isBefore(end)",
+        "documentation": "Boolean Series at/before a timestamp.",
+        "kind": "function"
+      }
+    ],
+    "log": [
+      {
+        "label": "log.info",
+        "insertText": "log.info(${1:value})",
+        "detail": "log.info(value)",
+        "documentation": "Write informational output to the KX Studio Output panel.",
+        "kind": "function"
+      },
+      {
+        "label": "log.warn",
+        "insertText": "log.warn(${1:value})",
+        "detail": "log.warn(value)",
+        "documentation": "Write warning output to the KX Studio Output panel.",
+        "kind": "function"
+      },
+      {
+        "label": "log.error",
+        "insertText": "log.error(${1:value})",
+        "detail": "log.error(value)",
+        "documentation": "Write error output to the KX Studio Output panel.",
+        "kind": "function"
+      }
+    ],
+    "console": [
+      {
+        "label": "console.log",
+        "insertText": "console.log(${1:value})",
+        "detail": "console.log(value)",
+        "documentation": "Write informational output to the KX Studio Output panel.",
+        "kind": "function"
+      },
+      {
+        "label": "console.info",
+        "insertText": "console.info(${1:value})",
+        "detail": "console.info(value)",
+        "documentation": "Write informational output to the KX Studio Output panel.",
+        "kind": "function"
+      },
+      {
+        "label": "console.warn",
+        "insertText": "console.warn(${1:value})",
+        "detail": "console.warn(value)",
+        "documentation": "Write warning output to the KX Studio Output panel.",
+        "kind": "function"
+      },
+      {
+        "label": "console.error",
+        "insertText": "console.error(${1:value})",
+        "detail": "console.error(value)",
+        "documentation": "Write error output to the KX Studio Output panel.",
+        "kind": "function"
+      }
+    ],
+    "strategy": [
+      {
+        "label": "strategy.entry",
+        "insertText": "strategy.entry(\"${1:Long}\", strategy.${2:long}, { dataset: \"${3:dataset_name}\", qtyPercent: ${4:20} })",
+        "detail": "strategy.entry(\"Long\", strategy.long, { dataset: \"dataset_name\", qtyPercent: 20 )",
+        "documentation": "Submit a market, limit, stop, or stop-limit entry. In portfolio mode dataset routes the order to a registered tradable instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.order",
+        "insertText": "strategy.order(\"${1:Order}\", strategy.${2:long}, { dataset: \"${3:dataset_name}\", qty: ${4:1} })",
+        "detail": "strategy.order(\"Order\", strategy.long, { dataset: \"dataset_name\", qty: 1 )",
+        "documentation": "Submit a generic directional market, limit, stop, or stop-limit order. Generic orders bypass the entry pyramiding cap.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.close",
+        "insertText": "strategy.close(\"${1:Long}\", { dataset: \"${2:dataset_name}\", qtyPercent: ${3:50} })",
+        "detail": "strategy.close(\"Long\", { dataset: \"dataset_name\", qtyPercent: 50 )",
+        "documentation": "Close all or part of a named instrument entry at that instrument's next eligible bar open.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.closeAll",
+        "insertText": "strategy.closeAll()",
+        "detail": "strategy.closeAll()",
+        "documentation": "Close every open portfolio position at each instrument's next eligible bar open. Optional qty/qtyPercent can reduce them instead.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.exit",
+        "insertText": "strategy.exit(\"${1:Long Exit}\", { dataset: \"${2:dataset_name}\", from: \"${3:Long}\", qtyPercent: ${4:50}, stop: ${5:stopPrice}, limit: ${6:targetPrice} })",
+        "detail": "strategy.exit(\"Long Exit\", { dataset: \"dataset_name\", from: \"Long\", qtyPercent: 50, stop: stopPrice, limit: targetPrice )",
+        "documentation": "Attach/update an independent stop, target, partial scale-out, or trailing exit on the primary or named portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.cancel",
+        "insertText": "strategy.cancel(\"${1:Long}\", { dataset: \"${2:dataset_name}\" })",
+        "detail": "strategy.cancel(\"Long\", { dataset: \"dataset_name\" )",
+        "documentation": "Cancel a pending order by id on the primary or specified portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.cancelAll",
+        "insertText": "strategy.cancelAll()",
+        "detail": "strategy.cancelAll()",
+        "documentation": "Cancel all pending entry orders.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.position",
+        "insertText": "strategy.position(\"${1:dataset_name}\")",
+        "detail": "strategy.position(\"dataset_name\")",
+        "documentation": "Inspect live position state for a named portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.positionSizeOf",
+        "insertText": "strategy.positionSizeOf(\"${1:dataset_name}\")",
+        "detail": "strategy.positionSizeOf(\"dataset_name\")",
+        "documentation": "Signed live position size for a named portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.positionAvgPriceOf",
+        "insertText": "strategy.positionAvgPriceOf(\"${1:dataset_name}\")",
+        "detail": "strategy.positionAvgPriceOf(\"dataset_name\")",
+        "documentation": "Average live position price for a named portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.openPnlOf",
+        "insertText": "strategy.openPnlOf(\"${1:dataset_name}\")",
+        "detail": "strategy.openPnlOf(\"dataset_name\")",
+        "documentation": "Unrealised P&L for a named portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.positionSideOf",
+        "insertText": "strategy.positionSideOf(\"${1:dataset_name}\")",
+        "detail": "strategy.positionSideOf(\"dataset_name\")",
+        "documentation": "Live long/short side for a named portfolio instrument.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.positionBarsHeldOf",
+        "insertText": "strategy.positionBarsHeldOf(\"${1:dataset_name}\")",
+        "detail": "strategy.positionBarsHeldOf(\"dataset_name\")",
+        "documentation": "Instrument bars/sessions held for a named live portfolio position.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.positionEntryTimeOf",
+        "insertText": "strategy.positionEntryTimeOf(\"${1:dataset_name}\")",
+        "detail": "strategy.positionEntryTimeOf(\"dataset_name\")",
+        "documentation": "Entry timestamp for a named live portfolio position, or na while flat.",
+        "kind": "function"
+      },
+      {
+        "label": "strategy.long",
+        "insertText": "strategy.long",
+        "detail": "strategy.long",
+        "documentation": "Long strategy direction constant.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.short",
+        "insertText": "strategy.short",
+        "detail": "strategy.short",
+        "documentation": "Short strategy direction constant.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.positionSize",
+        "insertText": "strategy.positionSize",
+        "detail": "number",
+        "documentation": "Signed live broker position size at the current completed bar: positive long, negative short, zero flat.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.positionAvgPrice",
+        "insertText": "strategy.positionAvgPrice",
+        "detail": "number | na",
+        "documentation": "Current broker average position price, or na when flat.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.positionEntryTime",
+        "insertText": "strategy.positionEntryTime",
+        "detail": "number | na",
+        "documentation": "Primary/current position entry timestamp, or na when flat.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.positionBarsHeld",
+        "insertText": "strategy.positionBarsHeld",
+        "detail": "number",
+        "documentation": "Primary/current position bars/sessions held, including the entry bar.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.cash",
+        "insertText": "strategy.cash",
+        "detail": "number",
+        "documentation": "Current realised broker cash/balance after commissions and closed P&L.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.equity",
+        "insertText": "strategy.equity",
+        "detail": "number",
+        "documentation": "Current marked-to-market equity at the completed bar close.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.openPnl",
+        "insertText": "strategy.openPnl",
+        "detail": "number",
+        "documentation": "Current unrealised P&L at the completed bar close.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.pendingOrders",
+        "insertText": "strategy.pendingOrders",
+        "detail": "number",
+        "documentation": "Count of currently pending/queued broker orders.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.availableCash",
+        "insertText": "strategy.availableCash",
+        "detail": "number",
+        "documentation": "Shared account cash currently available for new fills.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.buyingPower",
+        "insertText": "strategy.buyingPower",
+        "detail": "number",
+        "documentation": "Current account buying power. currently equals available cash; separate for future leverage rules.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.openPositions",
+        "insertText": "strategy.openPositions",
+        "detail": "number",
+        "documentation": "Number of simultaneously open portfolio positions.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.grossExposure",
+        "insertText": "strategy.grossExposure",
+        "detail": "number",
+        "documentation": "Absolute market notional across all open positions.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.netExposure",
+        "insertText": "strategy.netExposure",
+        "detail": "number",
+        "documentation": "Signed market notional across all open positions.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.grossExposurePct",
+        "insertText": "strategy.grossExposurePct",
+        "detail": "number",
+        "documentation": "Gross exposure as a percentage of account equity.",
+        "kind": "value"
+      },
+      {
+        "label": "strategy.netExposurePct",
+        "insertText": "strategy.netExposurePct",
+        "detail": "number",
+        "documentation": "Net exposure as a percentage of account equity.",
+        "kind": "value"
+      }
+    ]
+  },
+  "items": [
+    {
+      "label": "isNa",
+      "insertText": "isNa(${1:value})",
+      "detail": "isNa(value)",
+      "documentation": "Return true for `na`/missing scalar or Series values.",
+      "kind": "function"
+    },
+    {
+      "label": "nz",
+      "insertText": "nz(${1:value}, ${2:replacement})",
+      "detail": "nz(value, replacement)",
+      "documentation": "Replace `na`/missing scalar or Series values with a fallback (default 0).",
+      "kind": "function"
+    },
+    {
+      "label": "emit",
+      "insertText": "emit(\"${1:name}\", ${2:value})",
+      "detail": "emit(name, value)",
+      "documentation": "Emit a named scalar or numeric Series result from a KX Study/Indicator for host inspection.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.sma",
+      "insertText": "ta.sma(${1:series}, ${2:length})",
+      "detail": "ta.sma(series, length)",
+      "documentation": "Simple moving average.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.ema",
+      "insertText": "ta.ema(${1:series}, ${2:length})",
+      "detail": "ta.ema(series, length)",
+      "documentation": "Exponential moving average.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.wma",
+      "insertText": "ta.wma(${1:series}, ${2:length})",
+      "detail": "ta.wma(series, length)",
+      "documentation": "Weighted moving average.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.rma",
+      "insertText": "ta.rma(${1:series}, ${2:length})",
+      "detail": "ta.rma(series, length)",
+      "documentation": "Wilder/RMA moving average.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.vwma",
+      "insertText": "ta.vwma(${1:series}, ${2:length})",
+      "detail": "ta.vwma(series, length)",
+      "documentation": "Volume-weighted moving average.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.rsi",
+      "insertText": "ta.rsi(${1:series}, ${2:length})",
+      "detail": "ta.rsi(series, length)",
+      "documentation": "Relative Strength Index.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.macd",
+      "insertText": "ta.macd(${1:series}, ${2:12}, ${3:26}, ${4:9})",
+      "detail": "ta.macd(series, 12, 26, 9)",
+      "documentation": "MACD tuple.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.atr",
+      "insertText": "ta.atr(${1:14})",
+      "detail": "ta.atr(14)",
+      "documentation": "Average True Range.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.tr",
+      "insertText": "ta.tr()",
+      "detail": "ta.tr()",
+      "documentation": "True range series.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.adx",
+      "insertText": "ta.adx(${1:14})",
+      "detail": "ta.adx(14)",
+      "documentation": "Average Directional Index.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.stdev",
+      "insertText": "ta.stdev(${1:series}, ${2:length})",
+      "detail": "ta.stdev(series, length)",
+      "documentation": "Rolling standard deviation.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.variance",
+      "insertText": "ta.variance(${1:series}, ${2:length})",
+      "detail": "ta.variance(series, length)",
+      "documentation": "Rolling variance.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.correlation",
+      "insertText": "ta.correlation(${1:a}, ${2:b}, ${3:length})",
+      "detail": "ta.correlation(a, b, length)",
+      "documentation": "Rolling Pearson correlation.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.covariance",
+      "insertText": "ta.covariance(${1:a}, ${2:b}, ${3:length})",
+      "detail": "ta.covariance(a, b, length)",
+      "documentation": "Rolling covariance.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.highest",
+      "insertText": "ta.highest(${1:series}, ${2:length})",
+      "detail": "ta.highest(series, length)",
+      "documentation": "Rolling highest value.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.lowest",
+      "insertText": "ta.lowest(${1:series}, ${2:length})",
+      "detail": "ta.lowest(series, length)",
+      "documentation": "Rolling lowest value.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.highestBars",
+      "insertText": "ta.highestBars(${1:series}, ${2:length})",
+      "detail": "ta.highestBars(series, length)",
+      "documentation": "Bars since rolling highest.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.lowestBars",
+      "insertText": "ta.lowestBars(${1:series}, ${2:length})",
+      "detail": "ta.lowestBars(series, length)",
+      "documentation": "Bars since rolling lowest.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.change",
+      "insertText": "ta.change(${1:series}, ${2:1})",
+      "detail": "ta.change(series, 1)",
+      "documentation": "Difference from N bars ago.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.returns",
+      "insertText": "ta.returns(${1:series}, ${2:1})",
+      "detail": "ta.returns(series, 1)",
+      "documentation": "Decimal simple return from N observations ago.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.logReturns",
+      "insertText": "ta.logReturns(${1:series}, ${2:1})",
+      "detail": "ta.logReturns(series, 1)",
+      "documentation": "Natural-log return from N observations ago.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.bbands",
+      "insertText": "ta.bbands(${1:series}, ${2:20}, ${3:2})",
+      "detail": "ta.bbands(series, 20, 2)",
+      "documentation": "Bollinger Bands object with basis, upper and lower Series.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.obv",
+      "insertText": "ta.obv(${1:price}, ${2:volume})",
+      "detail": "ta.obv(price, volume)",
+      "documentation": "On-Balance Volume.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.roc",
+      "insertText": "ta.roc(${1:series}, ${2:length})",
+      "detail": "ta.roc(series, length)",
+      "documentation": "Rate of change.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.momentum",
+      "insertText": "ta.momentum(${1:series}, ${2:length})",
+      "detail": "ta.momentum(series, length)",
+      "documentation": "Momentum over N bars.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.crossover",
+      "insertText": "ta.crossover(${1:a}, ${2:b})",
+      "detail": "ta.crossover(a, b)",
+      "documentation": "True where A crosses over B.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.crossunder",
+      "insertText": "ta.crossunder(${1:a}, ${2:b})",
+      "detail": "ta.crossunder(a, b)",
+      "documentation": "True where A crosses under B.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.barssince",
+      "insertText": "ta.barssince(${1:condition})",
+      "detail": "ta.barssince(condition)",
+      "documentation": "Bars since condition was true.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.valuewhen",
+      "insertText": "ta.valuewhen(${1:condition}, ${2:value}, ${3:occurrence})",
+      "detail": "ta.valuewhen(condition, value, occurrence)",
+      "documentation": "Value when a condition occurred.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.percentile",
+      "insertText": "ta.percentile(${1:series}, ${2:length}, ${3:percentile})",
+      "detail": "ta.percentile(series, length, percentile)",
+      "documentation": "Rolling percentile.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.percentRank",
+      "insertText": "ta.percentRank(${1:series}, ${2:length})",
+      "detail": "ta.percentRank(series, length)",
+      "documentation": "Rolling percentile rank.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.linreg",
+      "insertText": "ta.linreg(${1:series}, ${2:length})",
+      "detail": "ta.linreg(series, length)",
+      "documentation": "Rolling linear regression value.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.zscore",
+      "insertText": "ta.zscore(${1:series}, ${2:length})",
+      "detail": "ta.zscore(series, length)",
+      "documentation": "Rolling Z-score.",
+      "kind": "function"
+    },
+    {
+      "label": "ta.vwap",
+      "insertText": "ta.vwap(${1:price}, ${2:volume})",
+      "detail": "ta.vwap(price, volume)",
+      "documentation": "Volume-weighted average price.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.mean",
+      "insertText": "stats.mean(${1:values})",
+      "detail": "stats.mean(values)",
+      "documentation": "Arithmetic mean.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.sum",
+      "insertText": "stats.sum(${1:values})",
+      "detail": "stats.sum(values)",
+      "documentation": "Sum numeric values.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.min",
+      "insertText": "stats.min(${1:values})",
+      "detail": "stats.min(values)",
+      "documentation": "Minimum numeric value.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.max",
+      "insertText": "stats.max(${1:values})",
+      "detail": "stats.max(values)",
+      "documentation": "Maximum numeric value.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.count",
+      "insertText": "stats.count(${1:values})",
+      "detail": "stats.count(values)",
+      "documentation": "Count finite numeric observations.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.median",
+      "insertText": "stats.median(${1:values})",
+      "detail": "stats.median(values)",
+      "documentation": "Median.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.mode",
+      "insertText": "stats.mode(${1:values})",
+      "detail": "stats.mode(values)",
+      "documentation": "Mode.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.variance",
+      "insertText": "stats.variance(${1:values})",
+      "detail": "stats.variance(values)",
+      "documentation": "Variance.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.stdev",
+      "insertText": "stats.stdev(${1:values})",
+      "detail": "stats.stdev(values)",
+      "documentation": "Standard deviation.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.correlation",
+      "insertText": "stats.correlation(${1:a}, ${2:b})",
+      "detail": "stats.correlation(a, b)",
+      "documentation": "Pearson correlation.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.covariance",
+      "insertText": "stats.covariance(${1:a}, ${2:b})",
+      "detail": "stats.covariance(a, b)",
+      "documentation": "Covariance.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.percentile",
+      "insertText": "stats.percentile(${1:values}, ${2:p})",
+      "detail": "stats.percentile(values, p)",
+      "documentation": "Percentile.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.quantile",
+      "insertText": "stats.quantile(${1:values}, ${2:q})",
+      "detail": "stats.quantile(values, q)",
+      "documentation": "Quantile.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.rank",
+      "insertText": "stats.rank(${1:value}, ${2:values}, \"${3:desc}\")",
+      "detail": "stats.rank(value, values, \"desc\")",
+      "documentation": "Cross-sectional rank; tied values receive their average rank.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.percentileRank",
+      "insertText": "stats.percentileRank(${1:value}, ${2:values})",
+      "detail": "stats.percentileRank(value, values)",
+      "documentation": "Cross-sectional percentile rank from 0 to 100.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.skewness",
+      "insertText": "stats.skewness(${1:values})",
+      "detail": "stats.skewness(values)",
+      "documentation": "Sample skewness.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.kurtosis",
+      "insertText": "stats.kurtosis(${1:values})",
+      "detail": "stats.kurtosis(values)",
+      "documentation": "Sample kurtosis.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.zscore",
+      "insertText": "stats.zscore(${1:value}, ${2:values})",
+      "detail": "stats.zscore(value, values)",
+      "documentation": "Z-score.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.linearRegression",
+      "insertText": "stats.linearRegression(${1:x}, ${2:y})",
+      "detail": "stats.linearRegression(x, y)",
+      "documentation": "Linear regression summary.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.ols",
+      "insertText": "stats.ols(${1:y}, ${2:x})",
+      "detail": "stats.ols(y, x)",
+      "documentation": "Ordinary least squares regression.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.beta",
+      "insertText": "stats.beta(${1:asset}, ${2:benchmark})",
+      "detail": "stats.beta(asset, benchmark)",
+      "documentation": "Market beta.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.alpha",
+      "insertText": "stats.alpha(${1:asset}, ${2:benchmark})",
+      "detail": "stats.alpha(asset, benchmark)",
+      "documentation": "Regression alpha.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.sharpe",
+      "insertText": "stats.sharpe(${1:returns})",
+      "detail": "stats.sharpe(returns)",
+      "documentation": "Sharpe ratio.",
+      "kind": "function"
+    },
+    {
+      "label": "stats.sortino",
+      "insertText": "stats.sortino(${1:returns})",
+      "detail": "stats.sortino(returns)",
+      "documentation": "Sortino ratio.",
+      "kind": "function"
+    },
+    {
+      "label": "math.abs",
+      "insertText": "math.abs(${1:value})",
+      "detail": "math.abs(value)",
+      "documentation": "Absolute value.",
+      "kind": "function"
+    },
+    {
+      "label": "math.min",
+      "insertText": "math.min(${1:a}, ${2:b})",
+      "detail": "math.min(a, b)",
+      "documentation": "Minimum.",
+      "kind": "function"
+    },
+    {
+      "label": "math.max",
+      "insertText": "math.max(${1:a}, ${2:b})",
+      "detail": "math.max(a, b)",
+      "documentation": "Maximum.",
+      "kind": "function"
+    },
+    {
+      "label": "math.clamp",
+      "insertText": "math.clamp(${1:value}, ${2:min}, ${3:max})",
+      "detail": "math.clamp(value, min, max)",
+      "documentation": "Clamp a value.",
+      "kind": "function"
+    },
+    {
+      "label": "math.pow",
+      "insertText": "math.pow(${1:value}, ${2:power})",
+      "detail": "math.pow(value, power)",
+      "documentation": "Raise to a power.",
+      "kind": "function"
+    },
+    {
+      "label": "math.sqrt",
+      "insertText": "math.sqrt(${1:value})",
+      "detail": "math.sqrt(value)",
+      "documentation": "Square root.",
+      "kind": "function"
+    },
+    {
+      "label": "math.log",
+      "insertText": "math.log(${1:value})",
+      "detail": "math.log(value)",
+      "documentation": "Natural logarithm.",
+      "kind": "function"
+    },
+    {
+      "label": "math.log10",
+      "insertText": "math.log10(${1:value})",
+      "detail": "math.log10(value)",
+      "documentation": "Base-10 logarithm.",
+      "kind": "function"
+    },
+    {
+      "label": "math.exp",
+      "insertText": "math.exp(${1:value})",
+      "detail": "math.exp(value)",
+      "documentation": "Exponential.",
+      "kind": "function"
+    },
+    {
+      "label": "math.round",
+      "insertText": "math.round(${1:value})",
+      "detail": "math.round(value)",
+      "documentation": "Round.",
+      "kind": "function"
+    },
+    {
+      "label": "math.floor",
+      "insertText": "math.floor(${1:value})",
+      "detail": "math.floor(value)",
+      "documentation": "Floor.",
+      "kind": "function"
+    },
+    {
+      "label": "math.ceil",
+      "insertText": "math.ceil(${1:value})",
+      "detail": "math.ceil(value)",
+      "documentation": "Ceiling.",
+      "kind": "function"
+    },
+    {
+      "label": "math.sin",
+      "insertText": "math.sin(${1:value})",
+      "detail": "math.sin(value)",
+      "documentation": "Sine.",
+      "kind": "function"
+    },
+    {
+      "label": "math.cos",
+      "insertText": "math.cos(${1:value})",
+      "detail": "math.cos(value)",
+      "documentation": "Cosine.",
+      "kind": "function"
+    },
+    {
+      "label": "math.tan",
+      "insertText": "math.tan(${1:value})",
+      "detail": "math.tan(value)",
+      "documentation": "Tangent.",
+      "kind": "function"
+    },
+    {
+      "label": "math.sum",
+      "insertText": "math.sum(${1:values})",
+      "detail": "math.sum(values)",
+      "documentation": "Sum values.",
+      "kind": "function"
+    },
+    {
+      "label": "math.mean",
+      "insertText": "math.mean(${1:values})",
+      "detail": "math.mean(values)",
+      "documentation": "Mean values.",
+      "kind": "function"
+    },
+    {
+      "label": "math.median",
+      "insertText": "math.median(${1:values})",
+      "detail": "math.median(values)",
+      "documentation": "Median values.",
+      "kind": "function"
+    },
+    {
+      "label": "data.current",
+      "insertText": "data.current()",
+      "detail": "data.current()",
+      "documentation": "Current OHLCV chart dataset.",
+      "kind": "function"
+    },
+    {
+      "label": "data.security",
+      "insertText": "data.security(\"${1:CME:NQH6}\", { timeframe: \"${2:5m}\" })",
+      "detail": "data.security(\"CME:NQH6\", { timeframe: \"5m\" )",
+      "documentation": "Request another market instrument. Without an explicit range it follows the chart's loaded range.",
+      "kind": "function"
+    },
+    {
+      "label": "data.market",
+      "insertText": "data.market(\"${1:dataset_name}\")",
+      "detail": "data.market(\"dataset_name\")",
+      "documentation": "Load a named OHLCV Data Library dataset and causally align it to the current script clock. Useful for portfolio strategies because the same dataset reference can route orders.",
+      "kind": "function"
+    },
+    {
+      "label": "data.dataset",
+      "insertText": "data.dataset(\"${1:Earnings}\", { timeline: \"${2:availability}\", delay: \"${3:0d}\" })",
+      "detail": "data.dataset(\"Earnings\", { timeline: \"availability\", delay: \"0d\" )",
+      "documentation": "Load any imported dataset by id/name. Configured availability-time is the default causal timeline. For date-only observations without publication time, an explicit positive delay (for example 1d) provides a conservative availability assumption; otherwise KX warns that raw event time may not be point-in-time safe.",
+      "kind": "function"
+    },
+    {
+      "label": "data.available",
+      "insertText": "data.available(\"${1:Earnings}\")",
+      "detail": "data.available(\"Earnings\")",
+      "documentation": "Check whether a named imported dataset exists.",
+      "kind": "function"
+    },
+    {
+      "label": "data.list",
+      "insertText": "data.list({ kind: \"${1:ohlcv}\", timeframe: \"${2:1D}\", field: \"${3:id}\" })",
+      "detail": "data.list({ kind: \"ohlcv\", timeframe: \"1D\", field: \"id\" )",
+      "documentation": "List Data Library datasets by generic metadata filters. Returns ids by default; field can be id, name, symbol or summary.",
+      "kind": "function"
+    },
+    {
+      "label": "data.align",
+      "insertText": "data.align(${1:seriesOrDataset}, { mode: \"${2:previous}\" })",
+      "detail": "data.align(seriesOrDataset, { mode: \"previous\" )",
+      "documentation": "Align timestamped data to the active chart timeline. previous/exact are no-lookahead.",
+      "kind": "function"
+    },
+    {
+      "label": "data.filter",
+      "insertText": "data.filter(${1:dataset}, { from: \"${2:2025-01-01}\", to: \"${3:2026-01-01}\" })",
+      "detail": "data.filter(dataset, { from: \"2025-01-01\", to: \"2026-01-01\" )",
+      "documentation": "Filter a timestamped dataset by time and optional column comparisons.",
+      "kind": "function"
+    },
+    {
+      "label": "data.resample",
+      "insertText": "data.resample(${1:seriesOrDataset}, \"${2:1h}\", { method: \"${3:last}\" })",
+      "detail": "data.resample(seriesOrDataset, \"1h\", { method: \"last\" )",
+      "documentation": "Resample timestamped data. OHLCV fields use open/high/low/close/volume-aware aggregation.",
+      "kind": "function"
+    },
+    {
+      "label": "data.join",
+      "insertText": "data.join(${1:left}, ${2:right}, { mode: \"${3:previous}\", prefix: \"${4:right_}\" })",
+      "detail": "data.join(left, right, { mode: \"previous\", prefix: \"right_\" )",
+      "documentation": "Join right-side timestamped columns onto the left dataset timeline with causal alignment by default.",
+      "kind": "function"
+    },
+    {
+      "label": "series.shift",
+      "insertText": "series.shift(${1:values}, ${2:1})",
+      "detail": "series.shift(values, 1)",
+      "documentation": "Shift a series by N bars.",
+      "kind": "function"
+    },
+    {
+      "label": "series.fill",
+      "insertText": "series.fill(${1:values}, ${2:value})",
+      "detail": "series.fill(values, value)",
+      "documentation": "Fill missing values.",
+      "kind": "function"
+    },
+    {
+      "label": "series.replaceNa",
+      "insertText": "series.replaceNa(${1:values}, ${2:value})",
+      "detail": "series.replaceNa(values, value)",
+      "documentation": "Replace missing values.",
+      "kind": "function"
+    },
+    {
+      "label": "series.isNa",
+      "insertText": "series.isNa(${1:value})",
+      "detail": "series.isNa(value)",
+      "documentation": "Check for a missing value.",
+      "kind": "function"
+    },
+    {
+      "label": "series.first",
+      "insertText": "series.first(${1:values})",
+      "detail": "series.first(values)",
+      "documentation": "First non-missing value.",
+      "kind": "function"
+    },
+    {
+      "label": "series.last",
+      "insertText": "series.last(${1:values})",
+      "detail": "series.last(values)",
+      "documentation": "Latest value.",
+      "kind": "function"
+    },
+    {
+      "label": "series.cumsum",
+      "insertText": "series.cumsum(${1:values})",
+      "detail": "series.cumsum(values)",
+      "documentation": "Cumulative sum.",
+      "kind": "function"
+    },
+    {
+      "label": "series.normalize",
+      "insertText": "series.normalize(${1:values})",
+      "detail": "series.normalize(values)",
+      "documentation": "Normalize a series.",
+      "kind": "function"
+    },
+    {
+      "label": "series.diff",
+      "insertText": "series.diff(${1:values}, ${2:1})",
+      "detail": "series.diff(values, 1)",
+      "documentation": "Difference from N observations ago.",
+      "kind": "function"
+    },
+    {
+      "label": "series.pctChange",
+      "insertText": "series.pctChange(${1:values}, ${2:1})",
+      "detail": "series.pctChange(values, 1)",
+      "documentation": "Decimal percentage change from N observations ago.",
+      "kind": "function"
+    },
+    {
+      "label": "series.logReturn",
+      "insertText": "series.logReturn(${1:values}, ${2:1})",
+      "detail": "series.logReturn(values, 1)",
+      "documentation": "Natural-log return from N observations ago.",
+      "kind": "function"
+    },
+    {
+      "label": "series.changed",
+      "insertText": "series.changed(${1:values})",
+      "detail": "series.changed(values)",
+      "documentation": "Boolean Series true when the current non-missing value differs from the previous observation; useful for detecting newly available events after causal alignment.",
+      "kind": "function"
+    },
+    {
+      "label": "report.metric",
+      "insertText": "report.metric(\"${1:Metric}\", ${2:value}, { format: \"${3:number}\" })",
+      "detail": "report.metric(\"Metric\", value, { format: \"number\" )",
+      "documentation": "Add a scalar metric to the Research Report.",
+      "kind": "function"
+    },
+    {
+      "label": "report.table",
+      "insertText": "report.table(\"${1:Table}\", [\"${2:Column A}\", \"${3:Column B}\"], ${4:rows})",
+      "detail": "report.table(\"Table\", [\"Column A\", \"Column B\"], rows)",
+      "documentation": "Add a table to the Research Report.",
+      "kind": "function"
+    },
+    {
+      "label": "report.line",
+      "insertText": "report.line(\"${1:Series}\", ${2:series})",
+      "detail": "report.line(\"Series\", series)",
+      "documentation": "Add a numeric series line chart to the Research Report.",
+      "kind": "function"
+    },
+    {
+      "label": "report.histogram",
+      "insertText": "report.histogram(\"${1:Distribution}\", ${2:series})",
+      "detail": "report.histogram(\"Distribution\", series)",
+      "documentation": "Add a numeric histogram series to the Research Report.",
+      "kind": "function"
+    },
+    {
+      "label": "input.int",
+      "insertText": "input.int(\"${1:Length}\", ${2:20}, { min: ${3:1} })",
+      "detail": "input.int(\"Length\", 20, { min: 1 )",
+      "documentation": "Integer setting rendered in the KX Studio properties UI.",
+      "kind": "function"
+    },
+    {
+      "label": "input.float",
+      "insertText": "input.float(\"${1:Value}\", ${2:1.0})",
+      "detail": "input.float(\"Value\", 1.0)",
+      "documentation": "Floating-point setting.",
+      "kind": "function"
+    },
+    {
+      "label": "input.bool",
+      "insertText": "input.bool(\"${1:Enabled}\", ${2:true})",
+      "detail": "input.bool(\"Enabled\", true)",
+      "documentation": "Boolean setting.",
+      "kind": "function"
+    },
+    {
+      "label": "input.string",
+      "insertText": "input.string(\"${1:Text}\", \"${2:value}\")",
+      "detail": "input.string(\"Text\", \"value\")",
+      "documentation": "String setting.",
+      "kind": "function"
+    },
+    {
+      "label": "input.enum",
+      "insertText": "input.enum(\"${1:Mode}\", ${2:options})",
+      "detail": "input.enum(\"Mode\", options)",
+      "documentation": "Enum/dropdown setting.",
+      "kind": "function"
+    },
+    {
+      "label": "input.symbol",
+      "insertText": "input.symbol(\"${1:Symbol}\", \"${2:CME:ESH6}\")",
+      "detail": "input.symbol(\"Symbol\", \"CME:ESH6\")",
+      "documentation": "Instrument picker.",
+      "kind": "function"
+    },
+    {
+      "label": "input.timeframe",
+      "insertText": "input.timeframe(\"${1:Timeframe}\", \"${2:5m}\")",
+      "detail": "input.timeframe(\"Timeframe\", \"5m\")",
+      "documentation": "Timeframe picker.",
+      "kind": "function"
+    },
+    {
+      "label": "input.date",
+      "insertText": "input.date(\"${1:Date}\", \"${2:2026-01-01}\")",
+      "detail": "input.date(\"Date\", \"2026-01-01\")",
+      "documentation": "Date picker.",
+      "kind": "function"
+    },
+    {
+      "label": "input.dateRange",
+      "insertText": "input.dateRange(\"${1:Range}\", { from: \"${2:2026-01-01}\", to: \"${3:2026-12-31}\" })",
+      "detail": "input.dateRange(\"Range\", { from: \"2026-01-01\", to: \"2026-12-31\" )",
+      "documentation": "Date-range setting.",
+      "kind": "function"
+    },
+    {
+      "label": "input.session",
+      "insertText": "input.session(\"${1:Session}\", \"${2:09:30-16:00}\")",
+      "detail": "input.session(\"Session\", \"09:30-16:00\")",
+      "documentation": "Trading-session setting.",
+      "kind": "function"
+    },
+    {
+      "label": "pane.create",
+      "insertText": "pane.create(\"${1:momentum}\", { title: \"${2:Momentum}\", height: ${3:0.28} })",
+      "detail": "pane.create(\"momentum\", { title: \"Momentum\", height: 0.28 )",
+      "documentation": "Create or reference a named lower chart pane.",
+      "kind": "function"
+    },
+    {
+      "label": "plot.line",
+      "insertText": "plot.line(${1:series}, { title: \"${2:Line}\", pane: \"${3:overlay}\" })",
+      "detail": "plot.line(series, { title: \"Line\", pane: \"overlay\" )",
+      "documentation": "Render a line. pane may be overlay, new/lower, a pane name, or numeric pane index.",
+      "kind": "function"
+    },
+    {
+      "label": "plot.histogram",
+      "insertText": "plot.histogram(${1:series}, { title: \"${2:Histogram}\" })",
+      "detail": "plot.histogram(series, { title: \"Histogram\" )",
+      "documentation": "Render a histogram.",
+      "kind": "function"
+    },
+    {
+      "label": "plot.area",
+      "insertText": "plot.area(${1:series}, { title: \"${2:Area}\" })",
+      "detail": "plot.area(series, { title: \"Area\" )",
+      "documentation": "Render an area series.",
+      "kind": "function"
+    },
+    {
+      "label": "plot.baseline",
+      "insertText": "plot.baseline(${1:series}, { title: \"${2:Baseline}\" })",
+      "detail": "plot.baseline(series, { title: \"Baseline\" )",
+      "documentation": "Render a baseline series.",
+      "kind": "function"
+    },
+    {
+      "label": "plot.candles",
+      "insertText": "plot.candles(${1:dataset})",
+      "detail": "plot.candles(dataset)",
+      "documentation": "Render candles from a dataset.",
+      "kind": "function"
+    },
+    {
+      "label": "plot.bars",
+      "insertText": "plot.bars(${1:dataset})",
+      "detail": "plot.bars(dataset)",
+      "documentation": "Render OHLC bars from a dataset.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.hline",
+      "insertText": "draw.hline(${1:price}, { pane: \"${2:overlay}\" })",
+      "detail": "draw.hline(price, { pane: \"overlay\" )",
+      "documentation": "Horizontal price line on any chart pane.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.vline",
+      "insertText": "draw.vline(${1:time}, { pane: \"${2:overlay}\" })",
+      "detail": "draw.vline(time, { pane: \"overlay\" )",
+      "documentation": "Vertical time line.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.line",
+      "insertText": "draw.line(${1:time1}, ${2:price1}, ${3:time2}, ${4:price2}, { color: \"${5:#888}\" })",
+      "detail": "draw.line(time1, price1, time2, price2, { color: \"#888\" )",
+      "documentation": "Finite point-to-point line.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.ray",
+      "insertText": "draw.ray(${1:time1}, ${2:price1}, ${3:time2}, ${4:price2})",
+      "detail": "draw.ray(time1, price1, time2, price2)",
+      "documentation": "Ray extending through the second point.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.arrow",
+      "insertText": "draw.arrow(${1:time}, ${2:price}, \"${3:up}\", { text: \"${4:Signal}\" })",
+      "detail": "draw.arrow(time, price, \"up\", { text: \"Signal\" )",
+      "documentation": "Directional up/down arrow marker.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.marker",
+      "insertText": "draw.marker(${1:time}, ${2:price}, { shape: \"${3:circle}\" })",
+      "detail": "draw.marker(time, price, { shape: \"circle\" )",
+      "documentation": "Point marker (circle, square, diamond, triangle).",
+      "kind": "function"
+    },
+    {
+      "label": "draw.label",
+      "insertText": "draw.label(${1:time}, ${2:price}, \"${3:Label}\")",
+      "detail": "draw.label(time, price, \"Label\")",
+      "documentation": "Boxed chart label.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.text",
+      "insertText": "draw.text(${1:time}, ${2:price}, \"${3:Text}\")",
+      "detail": "draw.text(time, price, \"Text\")",
+      "documentation": "Unboxed chart text.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.box",
+      "insertText": "draw.box(${1:leftTime}, ${2:top}, ${3:rightTime}, ${4:bottom})",
+      "detail": "draw.box(leftTime, top, rightTime, bottom)",
+      "documentation": "Rectangle defined by time/price corners.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.rect",
+      "insertText": "draw.rect(${1:leftTime}, ${2:top}, ${3:rightTime}, ${4:bottom})",
+      "detail": "draw.rect(leftTime, top, rightTime, bottom)",
+      "documentation": "Rectangle alias for draw.box.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.zone",
+      "insertText": "draw.zone(${1:leftTime}, ${2:top}, ${3:rightTime}, ${4:bottom}, { fill: \"${5:#55555533}\" })",
+      "detail": "draw.zone(leftTime, top, rightTime, bottom, { fill: \"#55555533\" )",
+      "documentation": "Shaded analysis zone.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.polyline",
+      "insertText": "draw.polyline(${1:points}, { width: ${2:2} })",
+      "detail": "draw.polyline(points, { width: 2 )",
+      "documentation": "Polyline through [{time, price}, ...] points.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.channel",
+      "insertText": "draw.channel({ from: ${1:a}, to: ${2:b}, width: ${3:1.0} })",
+      "detail": "draw.channel({ from: a, to: b, width: 1.0 )",
+      "documentation": "Parallel analysis channel.",
+      "kind": "function"
+    },
+    {
+      "label": "draw.fib",
+      "insertText": "draw.fib({ from: ${1:a}, to: ${2:b} })",
+      "detail": "draw.fib({ from: a, to: b )",
+      "documentation": "Fibonacci retracement levels.",
+      "kind": "function"
+    },
+    {
+      "label": "array.length",
+      "insertText": "array.length(${1:values})",
+      "detail": "array.length(values)",
+      "documentation": "Array length.",
+      "kind": "function"
+    },
+    {
+      "label": "array.push",
+      "insertText": "array.push(${1:values}, ${2:value})",
+      "detail": "array.push(values, value)",
+      "documentation": "Append and return new length.",
+      "kind": "function"
+    },
+    {
+      "label": "array.pop",
+      "insertText": "array.pop(${1:values})",
+      "detail": "array.pop(values)",
+      "documentation": "Remove and return final item.",
+      "kind": "function"
+    },
+    {
+      "label": "array.get",
+      "insertText": "array.get(${1:values}, ${2:index})",
+      "detail": "array.get(values, index)",
+      "documentation": "Read an item by zero-based index.",
+      "kind": "function"
+    },
+    {
+      "label": "array.set",
+      "insertText": "array.set(${1:values}, ${2:index}, ${3:value})",
+      "detail": "array.set(values, index, value)",
+      "documentation": "Set an item by zero-based index and return the array.",
+      "kind": "function"
+    },
+    {
+      "label": "array.includes",
+      "insertText": "array.includes(${1:values}, ${2:value})",
+      "detail": "array.includes(values, value)",
+      "documentation": "Check whether an array contains a value.",
+      "kind": "function"
+    },
+    {
+      "label": "array.indexOf",
+      "insertText": "array.indexOf(${1:values}, ${2:value})",
+      "detail": "array.indexOf(values, value)",
+      "documentation": "Return the first matching index or -1.",
+      "kind": "function"
+    },
+    {
+      "label": "array.first",
+      "insertText": "array.first(${1:values})",
+      "detail": "array.first(values)",
+      "documentation": "First item.",
+      "kind": "function"
+    },
+    {
+      "label": "array.last",
+      "insertText": "array.last(${1:values})",
+      "detail": "array.last(values)",
+      "documentation": "Last item.",
+      "kind": "function"
+    },
+    {
+      "label": "array.slice",
+      "insertText": "array.slice(${1:values}, ${2:start}, ${3:end})",
+      "detail": "array.slice(values, start, end)",
+      "documentation": "Array slice.",
+      "kind": "function"
+    },
+    {
+      "label": "array.concat",
+      "insertText": "array.concat(${1:a}, ${2:b})",
+      "detail": "array.concat(a, b)",
+      "documentation": "Return a concatenated array.",
+      "kind": "function"
+    },
+    {
+      "label": "array.unique",
+      "insertText": "array.unique(${1:values})",
+      "detail": "array.unique(values)",
+      "documentation": "Return values with duplicates removed while preserving first occurrence.",
+      "kind": "function"
+    },
+    {
+      "label": "array.sort",
+      "insertText": "array.sort(${1:values}, \"${2:asc}\")",
+      "detail": "array.sort(values, \"asc\")",
+      "documentation": "Return a sorted copy; direction is asc or desc.",
+      "kind": "function"
+    },
+    {
+      "label": "map.create",
+      "insertText": "map.create()",
+      "detail": "map.create()",
+      "documentation": "Create a string-keyed map.",
+      "kind": "function"
+    },
+    {
+      "label": "map.set",
+      "insertText": "map.set(${1:map}, \"${2:key}\", ${3:value})",
+      "detail": "map.set(map, \"key\", value)",
+      "documentation": "Set a map value.",
+      "kind": "function"
+    },
+    {
+      "label": "map.get",
+      "insertText": "map.get(${1:map}, \"${2:key}\")",
+      "detail": "map.get(map, \"key\")",
+      "documentation": "Get a map value.",
+      "kind": "function"
+    },
+    {
+      "label": "map.has",
+      "insertText": "map.has(${1:map}, \"${2:key}\")",
+      "detail": "map.has(map, \"key\")",
+      "documentation": "Check map key.",
+      "kind": "function"
+    },
+    {
+      "label": "map.delete",
+      "insertText": "map.delete(${1:map}, \"${2:key}\")",
+      "detail": "map.delete(map, \"key\")",
+      "documentation": "Delete a map key and return whether it existed.",
+      "kind": "function"
+    },
+    {
+      "label": "map.size",
+      "insertText": "map.size(${1:map})",
+      "detail": "map.size(map)",
+      "documentation": "Number of map keys.",
+      "kind": "function"
+    },
+    {
+      "label": "map.keys",
+      "insertText": "map.keys(${1:map})",
+      "detail": "map.keys(map)",
+      "documentation": "Return map keys.",
+      "kind": "function"
+    },
+    {
+      "label": "map.values",
+      "insertText": "map.values(${1:map})",
+      "detail": "map.values(map)",
+      "documentation": "Return map values.",
+      "kind": "function"
+    },
+    {
+      "label": "map.entries",
+      "insertText": "map.entries(${1:map})",
+      "detail": "map.entries(map)",
+      "documentation": "Return [key, value] pairs.",
+      "kind": "function"
+    },
+    {
+      "label": "set.create",
+      "insertText": "set.create(${1:values})",
+      "detail": "set.create(values)",
+      "documentation": "Create a primitive-value set represented by a unique KX array.",
+      "kind": "function"
+    },
+    {
+      "label": "set.add",
+      "insertText": "set.add(${1:set}, ${2:value})",
+      "detail": "set.add(set, value)",
+      "documentation": "Add a value if absent and return the set.",
+      "kind": "function"
+    },
+    {
+      "label": "set.has",
+      "insertText": "set.has(${1:set}, ${2:value})",
+      "detail": "set.has(set, value)",
+      "documentation": "Check set membership.",
+      "kind": "function"
+    },
+    {
+      "label": "set.delete",
+      "insertText": "set.delete(${1:set}, ${2:value})",
+      "detail": "set.delete(set, value)",
+      "documentation": "Delete a value and return whether it existed.",
+      "kind": "function"
+    },
+    {
+      "label": "set.values",
+      "insertText": "set.values(${1:set})",
+      "detail": "set.values(set)",
+      "documentation": "Return the set values.",
+      "kind": "function"
+    },
+    {
+      "label": "set.size",
+      "insertText": "set.size(${1:set})",
+      "detail": "set.size(set)",
+      "documentation": "Number of unique values.",
+      "kind": "function"
+    },
+    {
+      "label": "object.keys",
+      "insertText": "object.keys(${1:value})",
+      "detail": "object.keys(value)",
+      "documentation": "Return object keys.",
+      "kind": "function"
+    },
+    {
+      "label": "object.values",
+      "insertText": "object.values(${1:value})",
+      "detail": "object.values(value)",
+      "documentation": "Return object values.",
+      "kind": "function"
+    },
+    {
+      "label": "object.has",
+      "insertText": "object.has(${1:value}, \"${2:key}\")",
+      "detail": "object.has(value, \"key\")",
+      "documentation": "Check whether an object contains a key.",
+      "kind": "function"
+    },
+    {
+      "label": "object.merge",
+      "insertText": "object.merge(${1:left}, ${2:right})",
+      "detail": "object.merge(left, right)",
+      "documentation": "Shallow-merge two objects into a new object.",
+      "kind": "function"
+    },
+    {
+      "label": "object.typeOf",
+      "insertText": "object.typeOf(${1:value})",
+      "detail": "object.typeOf(value)",
+      "documentation": "Return KX runtime type: na, series, array, object, number, string, boolean or function.",
+      "kind": "function"
+    },
+    {
+      "label": "session.define",
+      "insertText": "session.define(\"${1:0930-1600}\", { timezone: \"${2:America/New_York}\", days: \"${3:12345}\" })",
+      "detail": "session.define(\"0930-1600\", { timezone: \"America/New_York\", days: \"12345\" )",
+      "documentation": "Define a timezone-aware session. Days use Monday=1 through Sunday=7.",
+      "kind": "function"
+    },
+    {
+      "label": "session.isOpen",
+      "insertText": "session.isOpen(${1:definition})",
+      "detail": "session.isOpen(definition)",
+      "documentation": "Boolean Series indicating bars whose opening timestamp is inside the session.",
+      "kind": "function"
+    },
+    {
+      "label": "session.isFirstBar",
+      "insertText": "session.isFirstBar(${1:definition})",
+      "detail": "session.isFirstBar(definition)",
+      "documentation": "True on the first loaded bar that enters each session.",
+      "kind": "function"
+    },
+    {
+      "label": "session.isLastBar",
+      "insertText": "session.isLastBar(${1:definition})",
+      "detail": "session.isLastBar(definition)",
+      "documentation": "True on the last loaded bar before leaving each session.",
+      "kind": "function"
+    },
+    {
+      "label": "time.year",
+      "insertText": "time.year",
+      "detail": "Series<number>",
+      "documentation": "Calendar year in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.month",
+      "insertText": "time.month",
+      "detail": "Series<number>",
+      "documentation": "Calendar month (1-12) in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.day",
+      "insertText": "time.day",
+      "detail": "Series<number>",
+      "documentation": "Day of month in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.dayOfMonth",
+      "insertText": "time.dayOfMonth",
+      "detail": "Series<number>",
+      "documentation": "Alias for day of month in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.dayOfWeek",
+      "insertText": "time.dayOfWeek",
+      "detail": "Series<number>",
+      "documentation": "Weekday, Monday=1 through Sunday=7, in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.hour",
+      "insertText": "time.hour",
+      "detail": "Series<number>",
+      "documentation": "Hour (0-23) in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.minute",
+      "insertText": "time.minute",
+      "detail": "Series<number>",
+      "documentation": "Minute in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.second",
+      "insertText": "time.second",
+      "detail": "Series<number>",
+      "documentation": "Second in instrument timezone.",
+      "kind": "value"
+    },
+    {
+      "label": "time.parts",
+      "insertText": "time.parts(\"${1:America/New_York}\")",
+      "detail": "time.parts(\"America/New_York\")",
+      "documentation": "Return timezone-specific year/month/day/dayOfWeek/hour/minute/second Series.",
+      "kind": "function"
+    },
+    {
+      "label": "time.timestamp",
+      "insertText": "time.timestamp(${1:2026}, ${2:10}, ${3:24}, ${4:9}, ${5:30}, ${6:0}, \"${7:America/New_York}\")",
+      "detail": "time.timestamp(2026, 10, 24, 9, 30, 0, \"America/New_York\")",
+      "documentation": "Create an epoch-millisecond timestamp from local calendar parts, or pass an ISO-like string and optional timezone.",
+      "kind": "function"
+    },
+    {
+      "label": "time.isBetween",
+      "insertText": "time.isBetween(${1:start}, ${2:end})",
+      "detail": "time.isBetween(start, end)",
+      "documentation": "Boolean Series for bars between two timestamps.",
+      "kind": "function"
+    },
+    {
+      "label": "time.isAfter",
+      "insertText": "time.isAfter(${1:start})",
+      "detail": "time.isAfter(start)",
+      "documentation": "Boolean Series at/after a timestamp.",
+      "kind": "function"
+    },
+    {
+      "label": "time.isBefore",
+      "insertText": "time.isBefore(${1:end})",
+      "detail": "time.isBefore(end)",
+      "documentation": "Boolean Series at/before a timestamp.",
+      "kind": "function"
+    },
+    {
+      "label": "log.info",
+      "insertText": "log.info(${1:value})",
+      "detail": "log.info(value)",
+      "documentation": "Write informational output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "log.warn",
+      "insertText": "log.warn(${1:value})",
+      "detail": "log.warn(value)",
+      "documentation": "Write warning output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "log.error",
+      "insertText": "log.error(${1:value})",
+      "detail": "log.error(value)",
+      "documentation": "Write error output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "console.log",
+      "insertText": "console.log(${1:value})",
+      "detail": "console.log(value)",
+      "documentation": "Write informational output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "console.info",
+      "insertText": "console.info(${1:value})",
+      "detail": "console.info(value)",
+      "documentation": "Write informational output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "console.warn",
+      "insertText": "console.warn(${1:value})",
+      "detail": "console.warn(value)",
+      "documentation": "Write warning output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "console.error",
+      "insertText": "console.error(${1:value})",
+      "detail": "console.error(value)",
+      "documentation": "Write error output to the KX Studio Output panel.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.entry",
+      "insertText": "strategy.entry(\"${1:Long}\", strategy.${2:long}, { dataset: \"${3:dataset_name}\", qtyPercent: ${4:20} })",
+      "detail": "strategy.entry(\"Long\", strategy.long, { dataset: \"dataset_name\", qtyPercent: 20 )",
+      "documentation": "Submit a market, limit, stop, or stop-limit entry. In portfolio mode dataset routes the order to a registered tradable instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.order",
+      "insertText": "strategy.order(\"${1:Order}\", strategy.${2:long}, { dataset: \"${3:dataset_name}\", qty: ${4:1} })",
+      "detail": "strategy.order(\"Order\", strategy.long, { dataset: \"dataset_name\", qty: 1 )",
+      "documentation": "Submit a generic directional market, limit, stop, or stop-limit order. Generic orders bypass the entry pyramiding cap.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.close",
+      "insertText": "strategy.close(\"${1:Long}\", { dataset: \"${2:dataset_name}\", qtyPercent: ${3:50} })",
+      "detail": "strategy.close(\"Long\", { dataset: \"dataset_name\", qtyPercent: 50 )",
+      "documentation": "Close all or part of a named instrument entry at that instrument's next eligible bar open.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.closeAll",
+      "insertText": "strategy.closeAll()",
+      "detail": "strategy.closeAll()",
+      "documentation": "Close every open portfolio position at each instrument's next eligible bar open. Optional qty/qtyPercent can reduce them instead.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.exit",
+      "insertText": "strategy.exit(\"${1:Long Exit}\", { dataset: \"${2:dataset_name}\", from: \"${3:Long}\", qtyPercent: ${4:50}, stop: ${5:stopPrice}, limit: ${6:targetPrice} })",
+      "detail": "strategy.exit(\"Long Exit\", { dataset: \"dataset_name\", from: \"Long\", qtyPercent: 50, stop: stopPrice, limit: targetPrice )",
+      "documentation": "Attach/update an independent stop, target, partial scale-out, or trailing exit on the primary or named portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.cancel",
+      "insertText": "strategy.cancel(\"${1:Long}\", { dataset: \"${2:dataset_name}\" })",
+      "detail": "strategy.cancel(\"Long\", { dataset: \"dataset_name\" )",
+      "documentation": "Cancel a pending order by id on the primary or specified portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.cancelAll",
+      "insertText": "strategy.cancelAll()",
+      "detail": "strategy.cancelAll()",
+      "documentation": "Cancel all pending entry orders.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.position",
+      "insertText": "strategy.position(\"${1:dataset_name}\")",
+      "detail": "strategy.position(\"dataset_name\")",
+      "documentation": "Inspect live position state for a named portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.positionSizeOf",
+      "insertText": "strategy.positionSizeOf(\"${1:dataset_name}\")",
+      "detail": "strategy.positionSizeOf(\"dataset_name\")",
+      "documentation": "Signed live position size for a named portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.positionAvgPriceOf",
+      "insertText": "strategy.positionAvgPriceOf(\"${1:dataset_name}\")",
+      "detail": "strategy.positionAvgPriceOf(\"dataset_name\")",
+      "documentation": "Average live position price for a named portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.openPnlOf",
+      "insertText": "strategy.openPnlOf(\"${1:dataset_name}\")",
+      "detail": "strategy.openPnlOf(\"dataset_name\")",
+      "documentation": "Unrealised P&L for a named portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.positionSideOf",
+      "insertText": "strategy.positionSideOf(\"${1:dataset_name}\")",
+      "detail": "strategy.positionSideOf(\"dataset_name\")",
+      "documentation": "Live long/short side for a named portfolio instrument.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.positionBarsHeldOf",
+      "insertText": "strategy.positionBarsHeldOf(\"${1:dataset_name}\")",
+      "detail": "strategy.positionBarsHeldOf(\"dataset_name\")",
+      "documentation": "Instrument bars/sessions held for a named live portfolio position.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.positionEntryTimeOf",
+      "insertText": "strategy.positionEntryTimeOf(\"${1:dataset_name}\")",
+      "detail": "strategy.positionEntryTimeOf(\"dataset_name\")",
+      "documentation": "Entry timestamp for a named live portfolio position, or na while flat.",
+      "kind": "function"
+    },
+    {
+      "label": "strategy.long",
+      "insertText": "strategy.long",
+      "detail": "strategy.long",
+      "documentation": "Long strategy direction constant.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.short",
+      "insertText": "strategy.short",
+      "detail": "strategy.short",
+      "documentation": "Short strategy direction constant.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.positionSize",
+      "insertText": "strategy.positionSize",
+      "detail": "number",
+      "documentation": "Signed live broker position size at the current completed bar: positive long, negative short, zero flat.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.positionAvgPrice",
+      "insertText": "strategy.positionAvgPrice",
+      "detail": "number | na",
+      "documentation": "Current broker average position price, or na when flat.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.positionEntryTime",
+      "insertText": "strategy.positionEntryTime",
+      "detail": "number | na",
+      "documentation": "Primary/current position entry timestamp, or na when flat.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.positionBarsHeld",
+      "insertText": "strategy.positionBarsHeld",
+      "detail": "number",
+      "documentation": "Primary/current position bars/sessions held, including the entry bar.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.cash",
+      "insertText": "strategy.cash",
+      "detail": "number",
+      "documentation": "Current realised broker cash/balance after commissions and closed P&L.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.equity",
+      "insertText": "strategy.equity",
+      "detail": "number",
+      "documentation": "Current marked-to-market equity at the completed bar close.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.openPnl",
+      "insertText": "strategy.openPnl",
+      "detail": "number",
+      "documentation": "Current unrealised P&L at the completed bar close.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.pendingOrders",
+      "insertText": "strategy.pendingOrders",
+      "detail": "number",
+      "documentation": "Count of currently pending/queued broker orders.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.availableCash",
+      "insertText": "strategy.availableCash",
+      "detail": "number",
+      "documentation": "Shared account cash currently available for new fills.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.buyingPower",
+      "insertText": "strategy.buyingPower",
+      "detail": "number",
+      "documentation": "Current account buying power. currently equals available cash; separate for future leverage rules.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.openPositions",
+      "insertText": "strategy.openPositions",
+      "detail": "number",
+      "documentation": "Number of simultaneously open portfolio positions.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.grossExposure",
+      "insertText": "strategy.grossExposure",
+      "detail": "number",
+      "documentation": "Absolute market notional across all open positions.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.netExposure",
+      "insertText": "strategy.netExposure",
+      "detail": "number",
+      "documentation": "Signed market notional across all open positions.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.grossExposurePct",
+      "insertText": "strategy.grossExposurePct",
+      "detail": "number",
+      "documentation": "Gross exposure as a percentage of account equity.",
+      "kind": "value"
+    },
+    {
+      "label": "strategy.netExposurePct",
+      "insertText": "strategy.netExposurePct",
+      "detail": "number",
+      "documentation": "Net exposure as a percentage of account equity.",
+      "kind": "value"
+    }
+  ]
+}

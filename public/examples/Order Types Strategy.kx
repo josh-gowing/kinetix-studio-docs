@@ -1,0 +1,43 @@
+// v1.6 example: pending limit/stop entries, cancellation and bounded backtest.
+// Dataset economics (tick size, point value, currency) should normally be stored
+// in the Data Library and are inherited automatically by the Strategy.
+strategy({
+  name: "Pending Order Example",
+  dataset: "eur_usd_1d",
+  initialCapital: 100000,
+  commissionType: "percent",
+  commission: 0.0001,
+  slippage: 0,
+  pyramiding: 1,
+  defaultQtyType: "percent_equity",
+  defaultQtyValue: 25,
+  from: "2020-01-01",
+  to: "2026-12-31"
+});
+
+const fast = ta.ema(close, 20);
+const slow = ta.ema(close, 50);
+const longSignal = ta.crossover(fast, slow);
+const cancelSignal = ta.crossunder(fast, slow);
+
+// A limit or stop entry remains pending until it fills or is cancelled.
+if (longSignal) {
+  strategy.entry("Pullback Long", strategy.long, {
+    limit: close * 0.995
+  });
+}
+
+if (cancelSignal) {
+  strategy.cancel("Pullback Long");
+}
+
+// Protective levels may be scalar or Series<number>.
+const protectiveStop = close * 0.97;
+const profitTarget = close * 1.06;
+strategy.exit("Long Risk", "Pullback Long", {
+  stop: protectiveStop,
+  limit: profitTarget
+});
+
+plot.line(fast, { title: "EMA 20" });
+plot.line(slow, { title: "EMA 50" });

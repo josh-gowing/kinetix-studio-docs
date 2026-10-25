@@ -1,0 +1,18 @@
+// v1.8.6 example: point-in-time external events.
+// In Data Library set YOUR_EVENTS availability timestamp to its published/available column.
+study({
+  name: "Point In Time Events v1.8.6",
+  dataset: "YOUR_MARKET_1D",
+  overlay: false
+});
+
+// If the dataset has an availabilityColumn, this defaults to the availability timeline.
+const events = data.dataset("YOUR_EVENTS");
+const observableValue = data.align(events.value, { mode: "previous" });
+
+// Explicit raw event/effective-time view for research only:
+const rawEvents = data.dataset("YOUR_EVENTS", { timeline: "event" });
+const eventTimeValue = data.align(rawEvents.value, { mode: "previous" });
+
+plot.line(observableValue, { title: "Observable value" });
+plot.line(eventTimeValue, { title: "Raw event-time value" });

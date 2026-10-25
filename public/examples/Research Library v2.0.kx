@@ -1,0 +1,12 @@
+library({ name: "Research Library v2.0" });
+
+function pct(current, previous) {
+  if (previous == 0 || isNa(previous)) { return na; }
+  return ((current / previous) - 1) * 100;
+}
+
+function clampScore(value, lower, upper) {
+  return math.clamp(value, lower, upper);
+}
+
+export { pct, clampScore };

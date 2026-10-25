@@ -1,0 +1,14 @@
+indicator({
+  name: "RSI Lower Pane",
+  overlay: true
+});
+
+const length = input.int("Length", 14, { min: 2 });
+const rsi = ta.rsi(close, length);
+const rsiPane = pane.create("rsi", { title: "RSI", height: 0.3 });
+
+plot.line(rsi, { title: "RSI", pane: rsiPane });
+draw.hline(70, { pane: rsiPane, color: "#777777" });
+draw.hline(30, { pane: rsiPane, color: "#777777" });
+
+export rsi;

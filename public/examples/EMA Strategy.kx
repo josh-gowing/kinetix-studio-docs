@@ -1,0 +1,27 @@
+// Change the dataset reference to an imported OHLCV dataset in your Data Library.
+strategy({
+  name: "EMA Cross Strategy",
+  dataset: "eur_usd_1d",
+  initialCapital: 100000,
+  currency: "USD",
+  commissionType: "percent",
+  commission: 0.0001,
+  slippage: 0,
+  pyramiding: 1,
+  defaultQtyType: "percent_equity",
+  defaultQtyValue: 100
+});
+
+const fast = ta.ema(close, 20);
+const slow = ta.ema(close, 50);
+
+if (ta.crossover(fast, slow)) {
+  strategy.entry("Long", strategy.long);
+}
+
+if (ta.crossunder(fast, slow)) {
+  strategy.close("Long");
+}
+
+plot.line(fast, { title: "EMA 20" });
+plot.line(slow, { title: "EMA 50" });

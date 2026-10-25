@@ -1,0 +1,22 @@
+study({
+  name: "Large Universe Return Study v2.0",
+  dataset: "YOUR_PRIMARY_DATASET_ID"
+});
+
+const universe = data.list({
+  kind: "ohlcv",
+  timeframe: "1D",
+  nameContains: "YOUR_UNIVERSE_PREFIX",
+  field: "id"
+});
+
+const returns20 = [];
+for (const dataset of universe) {
+  const market = data.market(dataset);
+  array.push(returns20, series.pctChange(market.close, 20).last);
+}
+
+report.metric("Universe Size", array.length(universe));
+report.metric("Mean 20-Bar Return", stats.mean(returns20), { format: "percent" });
+report.metric("Median 20-Bar Return", stats.median(returns20), { format: "percent" });
+report.metric("Dispersion", stats.stdev(returns20));

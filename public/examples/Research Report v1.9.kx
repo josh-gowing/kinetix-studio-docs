@@ -1,0 +1,28 @@
+// Kinetix Studio v1.9 — generic Study/report example.
+// Replace DATASET_A with any OHLCV dataset in your Data Library.
+study({
+  name: "Research Report v1.9",
+  dataset: "DATASET_A",
+  overlay: true
+});
+
+const fastLength = input.int("Fast Length", 20, { min: 2, max: 100, step: 1, group: "Model", tooltip: "Fast moving-average length." });
+const slowLength = input.int("Slow Length", 50, { min: 5, max: 300, step: 1, group: "Model", tooltip: "Slow moving-average length." });
+
+const fast = ta.ema(close, fastLength);
+const slow = ta.ema(close, slowLength);
+const spread = (fast - slow) / slow * 100;
+
+plot.line(fast, { id: "fast", title: "Fast EMA", color: "#5b98c9", width: 2 });
+plot.line(slow, { id: "slow", title: "Slow EMA", color: "#8a8a8a", width: 2 });
+plot.line(spread, { id: "spread", title: "EMA Spread %", pane: "lower", priceScale: "none" });
+
+report.metric("Last Close", close.last, { format: "number" });
+report.metric("Fast EMA", fast.last, { format: "number" });
+report.metric("Slow EMA", slow.last, { format: "number" });
+report.metric("Spread %", spread.last, { format: "percent" });
+report.line("EMA Spread", spread);
+report.table("Model Inputs", ["Input", "Value"], [
+  ["Fast Length", fastLength],
+  ["Slow Length", slowLength]
+]);

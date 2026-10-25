@@ -1,0 +1,52 @@
+indicator({
+  name: "Drawing Lab",
+  overlay: true
+});
+
+const fast = ta.ema(close, 8);
+const slow = ta.ema(close, 21);
+const momentum = fast - slow;
+
+const momentumPane = pane.create("momentum", {
+  title: "Momentum",
+  height: 0.28
+});
+
+plot.histogram(momentum, {
+  title: "EMA Spread",
+  pane: momentumPane
+});
+
+draw.hline(0, {
+  pane: momentumPane,
+  color: "#666666"
+});
+
+// Finite trend line on the main chart.
+draw.line(
+  time[40].last,
+  low[40].last,
+  time.last,
+  high.last,
+  { color: "#888888", width: 2 }
+);
+
+// Rectangle / analysis zone.
+draw.zone(
+  time[80].last,
+  ta.highest(high, 80).last,
+  time.last,
+  ta.lowest(low, 80).last,
+  { fill: "#88888818", color: "#777777" }
+);
+
+// Series-aware condition: markers are emitted on every matching bar.
+const longSignal = ta.crossover(fast, slow);
+if (longSignal) {
+  draw.arrow(time, low, "up", {
+    text: "Cross",
+    color: "#a0a0a0"
+  });
+}
+
+export momentum;

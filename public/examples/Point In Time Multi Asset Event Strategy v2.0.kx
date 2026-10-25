@@ -1,0 +1,94 @@
+// KX 2.0 generic point-in-time multi-asset event strategy template.
+// This is intentionally NOT earnings-specific. Replace the Data Library filters,
+// event dataset and field names to research earnings, macro releases, filings,
+// analyst changes, news, custom events, or another timestamped catalyst.
+//
+// Expected event dataset columns in this template:
+//   available_at  -> when the row became observable (configure as availabilityColumn)
+//   symbol        -> instrument symbol/key
+//   event_score   -> optional event/fundamental value used by your model
+//
+// The OHLCV datasets in this example are discovered from the Data Library so a
+// large universe does not need hundreds of hard-coded instrument strings.
+
+const universe = data.list({
+  kind: "ohlcv",
+  timeframe: "1D",
+  nameContains: "YOUR_UNIVERSE_PREFIX",
+  field: "id"
+});
+
+const holdSessions = input.int("Holding sessions", 40, {
+  min: 1,
+  max: 252,
+  group: "Exit"
+});
+
+const minReactionPct = input.float("Minimum observable reaction %", 3, {
+  min: 0,
+  step: 0.1,
+  group: "Entry"
+});
+
+strategy({
+  name: "Point-in-Time Multi-Asset Event Strategy",
+  dataset: "YOUR_PRIMARY_DATASET_ID",
+  instruments: universe,
+  benchmarks: ["YOUR_BENCHMARK_DATASET_ID"],
+  initialCapital: 100000,
+  maxPositions: 5,
+  defaultQtyType: "percent_equity",
+  defaultQtyValue: 20,
+  commissionType: "percent",
+  commission: 0
+});
+
+// data.dataset() defaults to the configured availability timeline when the
+// imported dataset has availabilityColumn metadata. Use timeline: "event" only
+// when you intentionally want raw/effective event time for analysis.
+const events = data.dataset("YOUR_EVENT_DATASET_ID");
+const signals = map.create();
+
+for (const dataset of universe) {
+  const market = data.market(dataset);
+
+  // Explicit column lookup through data.filter works even when an imported
+  // column name (e.g. symbol) overlaps dataset metadata.
+  const instrumentEvents = data.filter(events, {
+    column: "symbol",
+    equals: market.symbol
+  });
+
+  // Publication/availability timestamps are causally aligned to the strategy
+  // clock. series.changed() is true only when a newly available event arrives.
+  const available = data.align(instrumentEvents.available_at, { mode: "previous" });
+  const newEvent = series.changed(available);
+
+  // Reaction is only known after the current daily bar completes. Orders then
+  // fill on the next eligible bar according to normal KX next-bar semantics.
+  const reactionPct = series.pctChange(market.close, 1) * 100;
+  const qualifies = newEvent && reactionPct >= minReactionPct;
+
+  map.set(signals, dataset, qualifies);
+}
+
+for (const dataset of universe) {
+  const qualifies = map.get(signals, dataset);
+
+  if (qualifies && strategy.positionSizeOf(dataset) == 0) {
+    strategy.entry(dataset, strategy.long, { dataset: dataset });
+  }
+
+  // Generic session/bar-based time exit. Sweep 20 / 40 / 60 in Research Studio
+  // without changing the broker or hard-coding an event-study rule.
+  if (
+    strategy.positionSizeOf(dataset) > 0 &&
+    strategy.positionBarsHeldOf(dataset) >= holdSessions
+  ) {
+    strategy.close(dataset, { dataset: dataset });
+  }
+}
+
+report.metric("Universe Size", array.length(universe));
+report.metric("Final Portfolio Equity", strategy.equity, { format: "currency" });
+report.metric("Open Positions", strategy.openPositions);

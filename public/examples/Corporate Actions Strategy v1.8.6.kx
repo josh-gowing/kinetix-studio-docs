@@ -1,0 +1,32 @@
+// v1.8.6 example: generic split/dividend-aware strategy.
+// Replace the dataset IDs with your own imported market/action datasets.
+// Mark the price dataset's adjustment method correctly in Data Library.
+strategy({
+  name: "Corporate Actions Integrity v1.8.6",
+  dataset: "YOUR_ASSET_1D",
+  instruments: [
+    {
+      dataset: "YOUR_ASSET_1D",
+      corporateActions: ["YOUR_CORPORATE_ACTIONS"],
+      capitalModel: "cash",
+      quantityStep: 1
+    }
+  ],
+  initialCapital: 100000,
+  defaultQtyType: "percent_equity",
+  defaultQtyValue: 25
+});
+
+const fast = ta.ema(close, 20);
+const slow = ta.ema(close, 50);
+
+if (ta.crossover(fast, slow) && strategy.positionSize == 0) {
+  strategy.entry("Long", strategy.long);
+}
+
+if (ta.crossunder(fast, slow) && strategy.positionSize > 0) {
+  strategy.close("Long");
+}
+
+plot.line(fast, { title: "EMA 20" });
+plot.line(slow, { title: "EMA 50" });

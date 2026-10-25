@@ -1,0 +1,36 @@
+// Kinetix Studio v1.9 — generic Strategy research workflow example.
+// Replace DATASET_A and BENCHMARK_DATASET with Data Library IDs.
+strategy({
+  name: "Research Strategy v1.9",
+  dataset: "DATASET_A",
+  benchmarks: ["BENCHMARK_DATASET"],
+  initialCapital: 100000,
+  commissionType: "percent",
+  commission: 0.0001,
+  pyramiding: 1,
+  defaultQtyType: "percent_equity",
+  defaultQtyValue: 25
+});
+
+const fastLength = input.int("Fast EMA", 20, { min: 5, max: 80, step: 5, group: "Signal" });
+const slowLength = input.int("Slow EMA", 50, { min: 20, max: 200, step: 10, group: "Signal" });
+
+const fast = ta.ema(close, fastLength);
+const slow = ta.ema(close, slowLength);
+const longSignal = ta.crossover(fast, slow);
+const exitSignal = ta.crossunder(fast, slow);
+
+if (longSignal && strategy.positionSize == 0) {
+  strategy.entry("Long", strategy.long);
+}
+
+if (exitSignal && strategy.positionSize > 0) {
+  strategy.close("Long");
+}
+
+plot.line(fast, { id: "fast", title: "Fast EMA" });
+plot.line(slow, { id: "slow", title: "Slow EMA" });
+
+report.metric("Fast EMA Length", fastLength);
+report.metric("Slow EMA Length", slowLength);
+report.metric("Last Spread", ((fast.last - slow.last) / slow.last) * 100, { format: "percent" });

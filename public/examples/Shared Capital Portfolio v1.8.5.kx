@@ -1,0 +1,51 @@
+// v1.8.5 generic shared-capital portfolio example.
+// Replace the three dataset references with OHLCV datasets in your Data Library.
+// This is intentionally strategy-agnostic: the same runtime can be used for
+// technical, event-driven, rotation, cross-sectional, pairs or other systems.
+strategy({
+  name: "Shared Capital Portfolio v1.8.5",
+  dataset: "asset_a_1d",
+  instruments: [
+    "asset_b_1d",
+    {
+      dataset: "asset_c_1d",
+      capitalModel: "cash",
+      quantityStep: 1,
+      sector: "Example"
+    }
+  ],
+  initialCapital: 100000,
+  commissionType: "percent",
+  commission: 0.0001,
+  maxPositions: 2,
+  defaultQtyType: "percent_equity",
+  defaultQtyValue: 40
+});
+
+const aFast = ta.ema(close, 20);
+const aSlow = ta.ema(close, 50);
+
+const b = data.market("asset_b_1d");
+const bFast = ta.ema(b.close, 20);
+const bSlow = ta.ema(b.close, 50);
+
+const c = data.market("asset_c_1d");
+const cFast = ta.ema(c.close, 20);
+const cSlow = ta.ema(c.close, 50);
+
+if (ta.crossover(aFast, aSlow) && strategy.positionSizeOf("asset_a_1d") == 0) {
+  strategy.entry("A Long", strategy.long, { dataset: "asset_a_1d" });
+}
+if (ta.crossover(bFast, bSlow) && strategy.positionSizeOf("asset_b_1d") == 0) {
+  strategy.entry("B Long", strategy.long, { dataset: "asset_b_1d" });
+}
+if (ta.crossover(cFast, cSlow) && strategy.positionSizeOf("asset_c_1d") == 0) {
+  strategy.entry("C Long", strategy.long, { dataset: "asset_c_1d" });
+}
+
+if (ta.crossunder(aFast, aSlow)) strategy.close("A Long", { dataset: "asset_a_1d" });
+if (ta.crossunder(bFast, bSlow)) strategy.close("B Long", { dataset: "asset_b_1d" });
+if (ta.crossunder(cFast, cSlow)) strategy.close("C Long", { dataset: "asset_c_1d" });
+
+plot.line(aFast, { title: "Primary EMA 20" });
+plot.line(aSlow, { title: "Primary EMA 50" });
