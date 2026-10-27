@@ -1,3 +1,4 @@
+import catalog from "../generated/studio-docs.json";
 import { ArrowRight, BookOpen, Braces, ChartNoAxesCombined, Database, FlaskConical, Layers3, ShieldCheck } from "lucide-react";
 import type { KxRegistry } from "../types";
 import { routeTo } from "../router";
@@ -11,18 +12,18 @@ export function HomePage({ registry }: { registry: KxRegistry }) {
         <div className="eyebrow"><span className="status-dot" /> KX Language Reference · v{registry.version}</div>
         <h1>Code research without<br />Pine's ceiling.</h1>
         <p className="hero-copy">
-          The official language reference for KX, the scripting language inside Kinetix Studio.
+          The language reference and application manual for Kinetix Studio.
           Build indicators, research Studies and deterministic multi-asset strategies against your own data.
         </p>
         <div className="hero-actions">
           <button className="primary-button" onClick={() => routeTo("/guide/getting-started")}>Get started <ArrowRight size={15} /></button>
-          <button className="secondary-button" onClick={() => routeTo("/api")}>Browse API</button>
+          <button className="secondary-button" onClick={() => routeTo("/studio/overview")}>Studio manual</button><button className="secondary-button" onClick={() => routeTo("/api")}>Browse API</button>
         </div>
         <div className="hero-stats">
           <div><strong>{registry.items.length}</strong><span>API entries</span></div>
           <div><strong>{Object.keys(registry.namespaces).length}</strong><span>namespaces</span></div>
-          <div><strong>4</strong><span>script types</span></div>
-          <div><strong>2.0</strong><span>language generation</span></div>
+          <div><strong>{registry.declarations.length}</strong><span>script types</span></div>
+          <div><strong>{catalog.studioVersion}</strong><span>Studio version</span></div>
         </div>
       </section>
 
@@ -36,6 +37,7 @@ export function HomePage({ registry }: { registry: KxRegistry }) {
           <Feature icon={<ChartNoAxesCombined />} title="Indicators" text="Reusable calculations and visual overlays using the same market Series available to strategies." route="/guide/script-types" />
           <Feature icon={<FlaskConical />} title="Studies" text="Research imported datasets, produce report metrics, tables and charts without inventing trades." route="/guide/research" />
           <Feature icon={<Layers3 />} title="Strategies" text="Deterministic broker-aware execution with shared capital, portfolio positions and order state." route="/guide/strategies" />
+          <Feature icon={<Database />} title="Pipelines" text="Download, clean, transform and register data visually or with KX, using the same native engine." route="/studio/visual-data" />
           <Feature icon={<Braces />} title="Libraries" text="Package reusable KX logic into importable modules instead of duplicating research code." route="/guide/script-types" />
         </div>
       </section>

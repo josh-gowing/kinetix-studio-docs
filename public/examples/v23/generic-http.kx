@@ -1,0 +1,14 @@
+pipeline({ name: "Generic HTTP acquisition" });
+
+// Save a connection named "provider" in Data Connections first.
+// Configure its API key there; never place credentials in this file.
+const download = data.download({
+    connection: "provider",
+    path: "/prices.csv",
+    outputPath: "data/raw/provider/prices.csv",
+    scope: "workspace",
+    resumeExisting: true
+});
+const raw = data.read(download.path, { scope: "workspace", format: "csv" });
+console.log(data.preview(raw, { limit: 25, includeTotal: false }));
+// Add transforms/validation, then data.save() to register a processed version.

@@ -34,12 +34,13 @@ function GettingStarted() {
   return <div className="page prose-page">
     <PageIntro eyebrow="Guide 01" title="Getting Started">KX scripts live inside Kinetix Studio and operate directly on the chart or Data Library datasets you choose.</PageIntro>
     <h2>Choose the script type first</h2>
-    <p>Every KX file begins with one root declaration. Use an <code>indicator</code> for reusable chart calculations, a <code>study</code> for research, a <code>strategy</code> for backtesting, or a <code>library</code> for reusable modules.</p>
+    <p>Every KX file begins with one root declaration. Use an <code>indicator</code> for reusable chart calculations, a <code>study</code> for research, a <code>strategy</code> for backtesting, a <code>pipeline</code> to prepare data, or a <code>library</code> for reusable modules.</p>
     <div className="declaration-grid">
       <code>indicator({`{ name, dataset?, overlay? }`})</code>
       <code>study({`{ name, dataset?, overlay? }`})</code>
       <code>strategy({`{ name, dataset, ... }`})</code>
       <code>library({`{ name }`})</code>
+      <code>pipeline({`{ name }`})</code>
     </div>
     <h2>Your first indicator</h2>
     <p>The built-in market fields <code>open</code>, <code>high</code>, <code>low</code>, <code>close</code>, <code>volume</code> and <code>time</code> refer to the active script dataset.</p>
@@ -83,6 +84,7 @@ function ScriptTypes() {
     <CodeBlock code={researchExample} />
     <h2>Strategy</h2><p>Strategies have access to the deterministic broker runtime, account state, order submission and portfolio metrics.</p>
     <CodeBlock code={quickStrategy} />
+    <h2>Pipeline</h2><p>Pipelines read/download data, transform native plans, validate and save immutable registered outputs. These operations are separate from Study/Strategy execution.</p><CodeBlock code={'pipeline({ name: "Inspect data" });\nconst raw = data.read("data/prices.csv", { scope: "workspace", format: "csv" });\nconsole.log(data.preview(raw, { limit: 25, includeTotal: false }));'}/><p><a href="#/studio/visual-data">Visual preparation</a> can generate an equivalent KX pipeline.</p>
     <h2>Library</h2><p>Libraries package reusable logic. Import them from other KX files instead of duplicating calculations or research helpers.</p>
     <CodeBlock code={`library({ name: "Research Helpers" });\n\nexport function zMomentum(series, length) {\n  return stats.zscore(series.pctChange(series, length));\n}`} />
     <Next label="Data & Datasets" route="/guide/data" />

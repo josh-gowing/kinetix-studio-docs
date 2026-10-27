@@ -1,0 +1,21 @@
+pipeline({ name: "Paginated JSON acquisition" });
+// Adjust the named connection, endpoint, parameter names and JSON pointers
+// to match your provider's contract. Stop / resume operates on the whole job.
+const download = data.download({
+    connection: "provider",
+    path: "/records",
+    outputPath: "data/raw/provider/records.json",
+    query: { cursor: "" },
+    pagination: {
+        mode: "cursor",
+        parameter: "cursor",
+        recordsPointer: "/data",
+        nextPointer: "/next_cursor",
+        maxPages: 100
+    },
+    resumeExisting: true
+});
+const raw = data.read(download.path, {
+    scope: "workspace", format: "json", recordsPath: ["data"]
+});
+console.log(data.preview(raw, { limit: 25, includeTotal: false }));

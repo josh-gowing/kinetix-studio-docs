@@ -1,6 +1,6 @@
 {
   "language": "KX",
-  "version": "2.0",
+  "version": "2.1",
   "declarations": [
     {
       "label": "indicator",
@@ -21,6 +21,11 @@
       "label": "library",
       "signature": "library({ name })",
       "documentation": "Declare a reusable KX module imported with `import library Alias from \"Libraries/Name\"`."
+    },
+    {
+      "label": "pipeline",
+      "signature": "pipeline({ name })",
+      "documentation": "Declare a KX data-engine pipeline. Pipelines may read workspace/global files, transform them with the native DuckDB service, validate output and register immutable dataset versions."
     }
   ],
   "globals": [
@@ -680,6 +685,118 @@
         "insertText": "data.join(${1:left}, ${2:right}, { mode: \"${3:previous}\", prefix: \"${4:right_}\" })",
         "detail": "data.join(left, right, { mode: \"previous\", prefix: \"right_\" )",
         "documentation": "Join right-side timestamped columns onto the left dataset timeline with causal alignment by default.",
+        "kind": "function"
+      },
+      {
+        "label": "data.engineStatus",
+        "insertText": "data.engineStatus()",
+        "detail": "data.engineStatus()",
+        "documentation": "Return native DuckDB engine and catalog information. Pipeline scripts only.",
+        "kind": "function"
+      },
+      {
+        "label": "data.download",
+        "insertText": "data.download({ connection: \"${1:provider}\", path: \"${2:prices.csv}\", outputPath: \"${3:data/raw/prices.csv}\", scope: \"workspace\" })",
+        "detail": "data.download({ connection: \"provider\", path: \"prices.csv\", outputPath: \"data/raw/prices.csv\", scope: \"workspace\" )",
+        "documentation": "Pipeline-only native HTTPS download through a named connection. Credentials stay in the OS vault; returns an immutable raw path for data.read(). Jobs show progress and support cancellation/resume.",
+        "kind": "function"
+      },
+      {
+        "label": "data.read",
+        "insertText": "data.read(\"${1:./data/raw/file.parquet}\", { format: \"${2:auto}\", scope: \"${3:workspace}\" })",
+        "detail": "data.read(\"./data/raw/file.parquet\", { format: \"auto\", scope: \"workspace\" )",
+        "documentation": "Create a lazy native data plan for a workspace/global CSV, JSON or Parquet file. No rows are copied into the KX interpreter.",
+        "kind": "function"
+      },
+      {
+        "label": "data.select",
+        "insertText": "data.select(${1:table}, [\"${2:symbol}\", \"${3:time}\", \"${4:close}\"])",
+        "detail": "data.select(table, [\"symbol\", \"time\", \"close\"])",
+        "documentation": "Select columns in a native data plan.",
+        "kind": "function"
+      },
+      {
+        "label": "data.rename",
+        "insertText": "data.rename(${1:table}, { ${2:old_name}: \"${3:new_name}\" })",
+        "detail": "data.rename(table, { old_name: \"new_name\" )",
+        "documentation": "Rename columns in a native data plan.",
+        "kind": "function"
+      },
+      {
+        "label": "data.sort",
+        "insertText": "data.sort(${1:table}, [\"${2:symbol}\", { column: \"${3:time}\", direction: \"${4:asc}\" }])",
+        "detail": "data.sort(table, [\"symbol\", { column: \"time\", direction: \"asc\" ])",
+        "documentation": "Sort a native data plan.",
+        "kind": "function"
+      },
+      {
+        "label": "data.where",
+        "insertText": "data.where(${1:table}, { column: \"${2:close}\", op: \"${3:gt}\", value: ${4:0} })",
+        "detail": "data.where(table, { column: \"close\", op: \"gt\", value: 0 )",
+        "documentation": "Filter rows with a typed native predicate.",
+        "kind": "function"
+      },
+      {
+        "label": "data.dedupe",
+        "insertText": "data.dedupe(${1:table}, [\"${2:symbol}\", \"${3:time}\"], { keep: \"${4:last}\", orderBy: \"${5:time}\" })",
+        "detail": "data.dedupe(table, [\"symbol\", \"time\"], { keep: \"last\", orderBy: \"time\" )",
+        "documentation": "Deduplicate rows by one or more key columns.",
+        "kind": "function"
+      },
+      {
+        "label": "data.fillTable",
+        "insertText": "data.fillTable(${1:table}, \"${2:volume}\", ${3:0})",
+        "detail": "data.fillTable(table, \"volume\", 0)",
+        "documentation": "Fill null values in one native table column.",
+        "kind": "function"
+      },
+      {
+        "label": "data.derive",
+        "insertText": "data.derive(${1:table}, \"${2:return}\", \"${3:close / lag(close) over (partition by symbol order by time) - 1}\")",
+        "detail": "data.derive(table, \"return\", \"close / lag(close) over (partition by symbol order by time) - 1\")",
+        "documentation": "Add a DuckDB-backed derived column. Administrative/file-reading SQL is blocked.",
+        "kind": "function"
+      },
+      {
+        "label": "data.normalizeTime",
+        "insertText": "data.normalizeTime(${1:table}, \"${2:timestamp}\", { output: \"${3:time}\", inputUnit: \"${4:auto}\" })",
+        "detail": "data.normalizeTime(table, \"timestamp\", { output: \"time\", inputUnit: \"auto\" )",
+        "documentation": "Normalize a timestamp column to epoch milliseconds.",
+        "kind": "function"
+      },
+      {
+        "label": "data.joinBy",
+        "insertText": "data.joinBy(${1:left}, ${2:right}, { left: [\"${3:symbol}\", \"${4:date}\"], right: [\"${5:symbol}\", \"${6:date}\"], how: \"${7:left}\", prefix: \"${8:right_}\" })",
+        "detail": "data.joinBy(left, right, { left: [\"symbol\", \"date\"], right: [\"symbol\", \"date\"], how: \"left\", prefix: \"right_\" )",
+        "documentation": "Relational join of two native data plans by explicit keys.",
+        "kind": "function"
+      },
+      {
+        "label": "data.resampleOhlcv",
+        "insertText": "data.resampleOhlcv(${1:table}, { timeColumn: \"${2:time}\", interval: \"${3:1d}\", open: \"${4:open}\", high: \"${5:high}\", low: \"${6:low}\", close: \"${7:close}\", volume: \"${8:volume}\" })",
+        "detail": "data.resampleOhlcv(table, { timeColumn: \"time\", interval: \"1d\", open: \"open\", high: \"high\", low: \"low\", close: \"close\", volume: \"volume\" )",
+        "documentation": "Native OHLCV resampling by an epoch-millisecond time column.",
+        "kind": "function"
+      },
+      {
+        "label": "data.preview",
+        "insertText": "data.preview(${1:table}, { limit: ${2:50}, offset: ${3:0} })",
+        "detail": "data.preview(table, { limit: 50, offset: 0 )",
+        "documentation": "Execute a native plan and return up to 1000 preview rows. Set includeTotal: false to skip a full count; totalRows is then a lower bound unless totalRowsExact is true. DATE/TIME/TIMESTAMP values are readable strings with nativeType labels.",
+        "kind": "function"
+      },
+      {
+        "label": "data.validate",
+        "insertText": "data.validate(${1:table}, { requiredColumns: [\"${2:symbol}\", \"${3:time}\", \"${4:close}\"], types: { ${5:time}: \"number\", ${6:close}: \"number\" }, timeColumn: \"${7:time}\", duplicateBy: [\"${8:symbol}\", \"${9:time}\"] })",
+        "detail": "data.validate(table, { requiredColumns: [\"symbol\", \"time\", \"close\"], types: { time: \"number\", close: \"number\" , timeColumn: \"time\", duplicateBy: [\"symbol\", \"time\"] )",
+        "documentation": "Run native schema/type/timestamp/duplicate/OHLC/gap validation.",
+        "kind": "function"
+      },
+      {
+        "label": "data.save",
+        "insertText": "data.save(${1:table}, { name: \"${2:dataset_name}\", path: \"${3:./data/processed/output.parquet}\", kind: \"${4:custom}\", timeColumn: \"${5:time}\" })",
+        "detail": "data.save(table, { name: \"dataset_name\", path: \"./data/processed/output.parquet\", kind: \"custom\", timeColumn: \"time\" )",
+        "documentation": "Write and register an immutable versioned output. Paths start at the chosen workspace/global root. Parquet defaults to ZSTD; CSV is uncompressed. Match the path extension to format. Existing registered versions and source files cannot be overwritten. The result includes fileLocation and an id for a pinned data.dataset reference.",
         "kind": "function"
       }
     ],
@@ -2281,6 +2398,118 @@
       "insertText": "data.join(${1:left}, ${2:right}, { mode: \"${3:previous}\", prefix: \"${4:right_}\" })",
       "detail": "data.join(left, right, { mode: \"previous\", prefix: \"right_\" )",
       "documentation": "Join right-side timestamped columns onto the left dataset timeline with causal alignment by default.",
+      "kind": "function"
+    },
+    {
+      "label": "data.engineStatus",
+      "insertText": "data.engineStatus()",
+      "detail": "data.engineStatus()",
+      "documentation": "Return native DuckDB engine and catalog information. Pipeline scripts only.",
+      "kind": "function"
+    },
+    {
+      "label": "data.download",
+      "insertText": "data.download({ connection: \"${1:provider}\", path: \"${2:prices.csv}\", outputPath: \"${3:data/raw/prices.csv}\", scope: \"workspace\" })",
+      "detail": "data.download({ connection: \"provider\", path: \"prices.csv\", outputPath: \"data/raw/prices.csv\", scope: \"workspace\" )",
+      "documentation": "Pipeline-only native HTTPS download through a named connection. Credentials stay in the OS vault; returns an immutable raw path for data.read(). Jobs show progress and support cancellation/resume.",
+      "kind": "function"
+    },
+    {
+      "label": "data.read",
+      "insertText": "data.read(\"${1:./data/raw/file.parquet}\", { format: \"${2:auto}\", scope: \"${3:workspace}\" })",
+      "detail": "data.read(\"./data/raw/file.parquet\", { format: \"auto\", scope: \"workspace\" )",
+      "documentation": "Create a lazy native data plan for a workspace/global CSV, JSON or Parquet file. No rows are copied into the KX interpreter.",
+      "kind": "function"
+    },
+    {
+      "label": "data.select",
+      "insertText": "data.select(${1:table}, [\"${2:symbol}\", \"${3:time}\", \"${4:close}\"])",
+      "detail": "data.select(table, [\"symbol\", \"time\", \"close\"])",
+      "documentation": "Select columns in a native data plan.",
+      "kind": "function"
+    },
+    {
+      "label": "data.rename",
+      "insertText": "data.rename(${1:table}, { ${2:old_name}: \"${3:new_name}\" })",
+      "detail": "data.rename(table, { old_name: \"new_name\" )",
+      "documentation": "Rename columns in a native data plan.",
+      "kind": "function"
+    },
+    {
+      "label": "data.sort",
+      "insertText": "data.sort(${1:table}, [\"${2:symbol}\", { column: \"${3:time}\", direction: \"${4:asc}\" }])",
+      "detail": "data.sort(table, [\"symbol\", { column: \"time\", direction: \"asc\" ])",
+      "documentation": "Sort a native data plan.",
+      "kind": "function"
+    },
+    {
+      "label": "data.where",
+      "insertText": "data.where(${1:table}, { column: \"${2:close}\", op: \"${3:gt}\", value: ${4:0} })",
+      "detail": "data.where(table, { column: \"close\", op: \"gt\", value: 0 )",
+      "documentation": "Filter rows with a typed native predicate.",
+      "kind": "function"
+    },
+    {
+      "label": "data.dedupe",
+      "insertText": "data.dedupe(${1:table}, [\"${2:symbol}\", \"${3:time}\"], { keep: \"${4:last}\", orderBy: \"${5:time}\" })",
+      "detail": "data.dedupe(table, [\"symbol\", \"time\"], { keep: \"last\", orderBy: \"time\" )",
+      "documentation": "Deduplicate rows by one or more key columns.",
+      "kind": "function"
+    },
+    {
+      "label": "data.fillTable",
+      "insertText": "data.fillTable(${1:table}, \"${2:volume}\", ${3:0})",
+      "detail": "data.fillTable(table, \"volume\", 0)",
+      "documentation": "Fill null values in one native table column.",
+      "kind": "function"
+    },
+    {
+      "label": "data.derive",
+      "insertText": "data.derive(${1:table}, \"${2:return}\", \"${3:close / lag(close) over (partition by symbol order by time) - 1}\")",
+      "detail": "data.derive(table, \"return\", \"close / lag(close) over (partition by symbol order by time) - 1\")",
+      "documentation": "Add a DuckDB-backed derived column. Administrative/file-reading SQL is blocked.",
+      "kind": "function"
+    },
+    {
+      "label": "data.normalizeTime",
+      "insertText": "data.normalizeTime(${1:table}, \"${2:timestamp}\", { output: \"${3:time}\", inputUnit: \"${4:auto}\" })",
+      "detail": "data.normalizeTime(table, \"timestamp\", { output: \"time\", inputUnit: \"auto\" )",
+      "documentation": "Normalize a timestamp column to epoch milliseconds.",
+      "kind": "function"
+    },
+    {
+      "label": "data.joinBy",
+      "insertText": "data.joinBy(${1:left}, ${2:right}, { left: [\"${3:symbol}\", \"${4:date}\"], right: [\"${5:symbol}\", \"${6:date}\"], how: \"${7:left}\", prefix: \"${8:right_}\" })",
+      "detail": "data.joinBy(left, right, { left: [\"symbol\", \"date\"], right: [\"symbol\", \"date\"], how: \"left\", prefix: \"right_\" )",
+      "documentation": "Relational join of two native data plans by explicit keys.",
+      "kind": "function"
+    },
+    {
+      "label": "data.resampleOhlcv",
+      "insertText": "data.resampleOhlcv(${1:table}, { timeColumn: \"${2:time}\", interval: \"${3:1d}\", open: \"${4:open}\", high: \"${5:high}\", low: \"${6:low}\", close: \"${7:close}\", volume: \"${8:volume}\" })",
+      "detail": "data.resampleOhlcv(table, { timeColumn: \"time\", interval: \"1d\", open: \"open\", high: \"high\", low: \"low\", close: \"close\", volume: \"volume\" )",
+      "documentation": "Native OHLCV resampling by an epoch-millisecond time column.",
+      "kind": "function"
+    },
+    {
+      "label": "data.preview",
+      "insertText": "data.preview(${1:table}, { limit: ${2:50}, offset: ${3:0} })",
+      "detail": "data.preview(table, { limit: 50, offset: 0 )",
+      "documentation": "Execute a native plan and return up to 1000 preview rows. Set includeTotal: false to skip a full count; totalRows is then a lower bound unless totalRowsExact is true. DATE/TIME/TIMESTAMP values are readable strings with nativeType labels.",
+      "kind": "function"
+    },
+    {
+      "label": "data.validate",
+      "insertText": "data.validate(${1:table}, { requiredColumns: [\"${2:symbol}\", \"${3:time}\", \"${4:close}\"], types: { ${5:time}: \"number\", ${6:close}: \"number\" }, timeColumn: \"${7:time}\", duplicateBy: [\"${8:symbol}\", \"${9:time}\"] })",
+      "detail": "data.validate(table, { requiredColumns: [\"symbol\", \"time\", \"close\"], types: { time: \"number\", close: \"number\" , timeColumn: \"time\", duplicateBy: [\"symbol\", \"time\"] )",
+      "documentation": "Run native schema/type/timestamp/duplicate/OHLC/gap validation.",
+      "kind": "function"
+    },
+    {
+      "label": "data.save",
+      "insertText": "data.save(${1:table}, { name: \"${2:dataset_name}\", path: \"${3:./data/processed/output.parquet}\", kind: \"${4:custom}\", timeColumn: \"${5:time}\" })",
+      "detail": "data.save(table, { name: \"dataset_name\", path: \"./data/processed/output.parquet\", kind: \"custom\", timeColumn: \"time\" )",
+      "documentation": "Write and register an immutable versioned output. Paths start at the chosen workspace/global root. Parquet defaults to ZSTD; CSV is uncompressed. Match the path extension to format. Existing registered versions and source files cannot be overwritten. The result includes fileLocation and an id for a pinned data.dataset reference.",
       "kind": "function"
     },
     {

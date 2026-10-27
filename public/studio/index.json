@@ -1,0 +1,65 @@
+[
+  {
+    "id": "overview",
+    "title": "Studio workflow & capabilities",
+    "description": "Start here: choose the right script, workspace and data workflow.",
+    "source": "content/studio/overview.json",
+    "sha256": "2557e008781843c585837ed73975633a64b210916c2752a4b71beff204f18456"
+  },
+  {
+    "id": "desktop",
+    "title": "Editor, charts, settings & builds",
+    "description": "Use the desktop interface and produce an executable or installer.",
+    "source": "content/studio/desktop.json",
+    "sha256": "04e0fd647e6c26c9ec2753277f953cb5e8c04f95bc8e2d6985d77dbe9e9d1806"
+  },
+  {
+    "id": "workspaces",
+    "title": "Workspaces & shared libraries",
+    "description": "Project roots, Explorer, imports and global reusable code.",
+    "source": "WORKSPACES.md",
+    "sha256": "977d84fdfe62cb66ff1ffbc75f551046c3656cbe3a07a412f5d91fbd0e69a7f0"
+  },
+  {
+    "id": "connections",
+    "title": "Connections & downloads",
+    "description": "Provider setup, secure keys, download jobs, cancellation and resume.",
+    "source": "V2.3_CONNECTIONS.md",
+    "sha256": "9c83ce1380593752119e71f7dec5a1309ff5cc545f443d2c277cdbdb15ad9995"
+  },
+  {
+    "id": "visual-data",
+    "title": "Visual data preparation",
+    "description": "Preview, transform, validate, register and generate equivalent KX pipelines.",
+    "source": "content/studio/visual-data.json",
+    "sha256": "f902e480f70e79f04cab9f1c054ca79329165f29cc9a1809733f6d4713dc50af"
+  },
+  {
+    "id": "pipelines",
+    "title": "KX pipelines & native data engine",
+    "description": "Read, join, transform, validate, save and register data.",
+    "source": "DATA_ENGINE.md",
+    "sha256": "e50c4ae4fa4634ff6b902cf60e904f39f38653057fa2896b54a67b5713ab633f"
+  },
+  {
+    "id": "research-studio",
+    "title": "Research Studio",
+    "description": "Reports, reproducible runs, comparisons, sweeps and chronological windows.",
+    "source": "RESEARCH_STUDIO.md",
+    "sha256": "ce0ea6cbad9cc82a3f7494d1df8c32924c33cf7617924ff5a60b1c8c4bbe7006"
+  },
+  {
+    "id": "language-reference",
+    "title": "Language & runtime reference",
+    "description": "Detailed language, broker, portfolio and causal-data behavior.",
+    "source": "KX_LANGUAGE_FOUNDATION.md",
+    "sha256": "ac2c2efd9b5c7431c25cee6c4e597cd66f00d4863b65e57728f1321edcc71b55"
+  },
+  {
+    "id": "integration",
+    "title": "Host integration",
+    "description": "Embed Studio and connect workspace, data and chart services.",
+    "source": "INTEGRATION.md",
+    "sha256": "ee811c05ed29cf00f665c22bdb5b9803b129477bcb63d5a11ecb58ced9518664"
+  }
+]

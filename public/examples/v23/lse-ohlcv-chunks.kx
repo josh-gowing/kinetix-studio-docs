@@ -1,0 +1,29 @@
+pipeline({ name: "LSE chunked OHLCV" });
+// Each chunk has its own resumable raw snapshot. Rerunning skips verified
+// completed requests. Set resumeExisting: false to request a fresh revision.
+const windows = [
+    { from: "2020-01-01", to: "2024-12-31" },
+    { from: "2025-01-01", to: "2026-10-26" }
+];
+for (const chunk of windows) {
+    const download = data.download({
+        connection: "lse", path: "/v3/export", polling: "lse",
+        query: { market: "us_stocks", symbol: "AAPL", timeframe: "1d",
+            from: chunk.from, to: chunk.to,
+            format: "parquet", adjusted: "0", data: "candles" },
+        outputPath: "data/raw/lse/AAPL_" + chunk.from + "_" + chunk.to + ".parquet",
+        resumeExisting: true
+    });
+    const raw = data.read(download.path, { scope: "workspace", format: "parquet" });
+    const tagged = data.derive(raw, "symbol", "'AAPL'");
+    const timed = data.normalizeTime(tagged, "time", { inputUnit: "auto" });
+    const clean = data.dedupe(timed, ["symbol", "time"], { keep: "last", orderBy: "time" });
+    const ordered = data.sort(clean, ["symbol", "time"]);
+    console.log(data.save(ordered, {
+        name: "aapl_" + chunk.from,
+        path: "data/processed/lse/AAPL_" + chunk.from + ".parquet",
+        kind: "ohlcv", timeColumn: "time", timezone: "UTC", adjustmentMethod: "raw",
+        sourceProvider: "London Strategic Edge", requiredColumns: ["symbol", "time", "open", "high", "low", "close", "volume"],
+        roles: { symbol: "symbol", time: "time", open: "open", high: "high", low: "low", close: "close", volume: "volume" }
+    }));
+}
