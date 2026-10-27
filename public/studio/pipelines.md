@@ -470,7 +470,7 @@ Timestamp meaning must be explicit:
 - `utc_date`: the UTC calendar date identifies the vendor's trading session. The time-of-day is a label, not when the completed OHLCV was available. This is the initial policy for the tested LSE daily files; confirm vendor semantics before using a different source. A 13:00 UTC label does not make the daily close available at 13:00.
 - `instant`: map the actual UTC timestamp to its New York local date. This is not a roll-forward/roll-back convention for timestamps labelled after midnight. Select the mode matching the vendor contract.
 
-Temporal DATE/TIMESTAMP/TIMESTAMPTZ inputs are accepted; naive timestamps explicitly mean UTC in this operation. Clock-only TIME values and unparsed text are rejected. Numeric `inputUnit` is `ms` by default, or explicit `s`, `us`, `ns`; units are never guessed. DATE at midnight in instant mode maps to the prior New York date, so use `utc_date` for date labels.
+Temporal DATE/TIMESTAMP/TIMESTAMPTZ inputs are accepted; naive timestamps explicitly mean UTC in this operation. Strict ISO date/timestamp text is also accepted and preserved; missing offsets explicitly mean UTC. Clock-only TIME values, ambiguous locale dates and non-ISO text are rejected. Numeric `inputUnit` is `ms` by default, or explicit `s`, `us`, `ns`; units are never guessed. DATE at midnight in instant mode maps to the prior New York date, so use `utc_date` for date labels.
 
 Every original input column, including the source timestamp, is preserved. Output columns are reserved:
 
@@ -502,3 +502,11 @@ The registration role `"session_close": "time"` is intentional: it identifies th
 ### Role-mapping validation
 
 Native saves validate caller roles before applying daily defaults and before writing a processed file or registering a version. Keys must be existing output column names, values must be supported semantic roles, and at most one column may have the `time` role. For example, use `roles: { session_close: "time", close: "close" }`; `roles: { time: "session_close" }` is reversed and produces a diagnostic showing the corrected mapping. Daily normalization can infer standard OHLC roles and assigns its session-close time role automatically, so omit explicit roles unless custom column names need them. Multiple columns with the general `value` role remain supported. Existing pinned files and registrations are not rewritten; correct a malformed recipe and save a new immutable registration.
+
+
+## KX 2.2 / Studio v2.5 batch pipelines
+
+Arrays support `.length`, zero-based indexing and instance methods such as `.push()`, `.includes()`, `.slice()` and awaited sequential `.forEach(namedFunction)`. Existing array.* functions remain supported. Use try/catch around each instrument to recover from ordinary native failures; catch exposes message, code, operation and source location. throw and finally are supported. Stop and execution limits remain fatal. See V2.5_BATCH_PIPELINES.md and examples/pipelines/batch-daily-normalization-v2.5.kx for the complete contract, compatibility boundaries and acceptance recipe.
+
+
+Vendor ISO text timestamps in Parquet are supported by daily normalization in v2.5. Only ISO dates/full timestamps are accepted; naive ISO times explicitly mean UTC, offsets are honored, and the original text remains unchanged. Ambiguous locale dates and invalid/clock-only values fail closed.

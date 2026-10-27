@@ -1,6 +1,6 @@
 {
   "language": "KX",
-  "version": "2.1",
+  "version": "2.2",
   "declarations": [
     {
       "label": "indicator",
@@ -1157,10 +1157,17 @@
         "kind": "function"
       },
       {
+        "label": "array.forEach",
+        "insertText": "array.forEach(${1:values}, ${2:callback})",
+        "detail": "array.forEach(values, callback)",
+        "documentation": "Await a named KX function(value, index, array) sequentially for each original array position. Also supported as values.forEach(callback). Appends are not visited. Stop and execution limits remain fatal.",
+        "kind": "function"
+      },
+      {
         "label": "array.push",
         "insertText": "array.push(${1:values}, ${2:value})",
         "detail": "array.push(values, value)",
-        "documentation": "Append and return new length.",
+        "documentation": "Append values and return new length. Also available as values.push(value); arrays expose values.length and zero-based values[index].",
         "kind": "function"
       },
       {
@@ -2863,10 +2870,17 @@
       "kind": "function"
     },
     {
+      "label": "array.forEach",
+      "insertText": "array.forEach(${1:values}, ${2:callback})",
+      "detail": "array.forEach(values, callback)",
+      "documentation": "Await a named KX function(value, index, array) sequentially for each original array position. Also supported as values.forEach(callback). Appends are not visited. Stop and execution limits remain fatal.",
+      "kind": "function"
+    },
+    {
       "label": "array.push",
       "insertText": "array.push(${1:values}, ${2:value})",
       "detail": "array.push(values, value)",
-      "documentation": "Append and return new length.",
+      "documentation": "Append values and return new length. Also available as values.push(value); arrays expose values.length and zero-based values[index].",
       "kind": "function"
     },
     {

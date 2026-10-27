@@ -49,3 +49,7 @@ A workspace-relative path includes every folder from the workspace root to the d
 ## Limits are part of the documentation
 
 Do not assume every market/provider offers every interval or dataset. A date-only event timestamp does not establish when information became tradable. Portfolio intrabar routing, financing/cross-currency models and full out-of-core execution have documented boundaries. Consult the detailed language/runtime and research references before interpreting a backtest as realistic execution.
+
+## v2.5 batch pipelines
+
+KX 2.2 supports array `.length` and member methods, try/catch/throw/finally, and sequential named-function forEach. Build instrument-specific paths/names in loops, validate before saving, collect results and continue after an individual native failure. Stop and resource limits remain fatal. See **Batch pipelines & language improvements** for supported syntax and the reusable batch daily-normalization example. Existing native/calendar/point-in-time safeguards still apply.
