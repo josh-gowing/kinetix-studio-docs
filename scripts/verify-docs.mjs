@@ -14,6 +14,10 @@ for(const example of catalog.examples){assert.equal(hash(example.code),example.s
 for(const id of ["overview","visual-data","desktop","connections","pipelines","workspaces","research-studio","language-reference","integration"])assert(catalog.guides.some(g=>g.id===id),`Missing capability guide ${id}`);
 assert(registry.declarations.some(d=>d.label==="pipeline"),"Pipeline declaration missing");
 assert(catalog.examples.some(e=>e.file.startsWith("v23/")),"Nested acquisition examples missing");
+assert(registry.items.some(item=>item.label==="data.normalizeDailyOhlcv"),"Daily-session normalization API missing");
+assert(catalog.examples.some(e=>e.file==="pipelines/daily-session-normalization.kx"),"Daily-session recipe missing");
+assert(catalog.guides.find(g=>g.id==="visual-data").markdown.includes("source snapshot cutoff"),"Daily preparation instructions missing");
+assert(catalog.guides.find(g=>g.id==="pipelines").markdown.includes('"session_close": "time"'),"Session time/availability role explanation missing");
 const manifest=JSON.parse(read("src/generated/sync-manifest.json"));
 for(const file of manifest.files)assert(fs.existsSync(path.join(root,file)),`Missing managed asset ${file}`);
 assert.deepEqual(JSON.parse(read("public/examples/index.json")),catalog.examples.map(({file,title})=>({file,title})));

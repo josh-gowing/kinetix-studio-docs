@@ -32,14 +32,14 @@
     "title": "Visual data preparation",
     "description": "Preview, transform, validate, register and generate equivalent KX pipelines.",
     "source": "content/studio/visual-data.json",
-    "sha256": "f902e480f70e79f04cab9f1c054ca79329165f29cc9a1809733f6d4713dc50af"
+    "sha256": "8c30a3ff9d0ab820536e4ec4a6aa2ae34a78028afc5772003ae3f2382cd8bccf"
   },
   {
     "id": "pipelines",
     "title": "KX pipelines & native data engine",
     "description": "Read, join, transform, validate, save and register data.",
     "source": "DATA_ENGINE.md",
-    "sha256": "e50c4ae4fa4634ff6b902cf60e904f39f38653057fa2896b54a67b5713ab633f"
+    "sha256": "c4ef859ff20ae5b6f21322fa008fc1e54a32af16d05b876413bac719a3c0363b"
   },
   {
     "id": "research-studio",
