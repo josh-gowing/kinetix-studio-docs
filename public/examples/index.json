@@ -32,6 +32,10 @@
     "title": "Large Universe Study v2.0"
   },
   {
+    "file": "Local Data Pipeline v2.2.kx",
+    "title": "Local Data Pipeline v2.2"
+  },
+  {
     "file": "Lower Pane RSI.kx",
     "title": "Lower Pane RSI"
   },
@@ -74,5 +78,21 @@
   {
     "file": "Time Session Strategy v1.8.kx",
     "title": "Time Session Strategy v1.8"
+  },
+  {
+    "file": "v23/alpha-vantage-earnings.kx",
+    "title": "v23/alpha vantage earnings"
+  },
+  {
+    "file": "v23/generic-http.kx",
+    "title": "v23/generic http"
+  },
+  {
+    "file": "v23/lse-ohlcv-chunks.kx",
+    "title": "v23/lse ohlcv chunks"
+  },
+  {
+    "file": "v23/paginated-json.kx",
+    "title": "v23/paginated json"
   }
 ]

@@ -1,0 +1,21 @@
+pipeline({ name: "Alpha Vantage earnings" });
+// Save the Alpha Vantage template with its key in Data Connections first.
+const download = data.download({
+    connection: "alpha-vantage", path: "/query",
+    query: { function: "EARNINGS", symbol: "AAPL" },
+    jsonArrayPointer: "/quarterlyEarnings",
+    outputPath: "data/raw/alpha_vantage/AAPL_earnings.json",
+    resumeExisting: true
+});
+const raw = data.read(download.path, {
+    scope: "workspace", format: "json", recordsPath: ["quarterlyEarnings"]
+});
+const tagged = data.derive(raw, "symbol", "'AAPL'");
+console.log(data.preview(tagged, { limit: 25, includeTotal: false }));
+console.log(data.save(tagged, {
+    name: "aapl_earnings_raw_fields",
+    path: "data/processed/alpha_vantage/AAPL_earnings.parquet",
+    kind: "fundamentals", sourceProvider: "Alpha Vantage",
+    sourceUrl: "https://www.alphavantage.co/documentation/",
+    metadata: { availability: "reportedDate is date-only; historical as-of availability is unverified" }
+}));

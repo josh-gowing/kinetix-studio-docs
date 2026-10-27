@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+
+import catalog from "./generated/studio-docs.json";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import registryJson from "./generated/kx-api.json";
 import type { GuideId, KxRegistry } from "./types";
 import { parseRoute, type Route } from "./router";
@@ -11,6 +13,7 @@ import { ApiIndexPage, NamespacePage } from "./components/ApiPage";
 import { ExamplesPage } from "./components/ExamplesPage";
 
 const registry = registryJson as KxRegistry;
+const StudioPage = lazy(() => import("./components/StudioPage").then(module => ({ default: module.StudioPage })));
 
 export default function App() {
   const [route, setRoute] = useState<Route>(() => parseRoute());
@@ -38,6 +41,7 @@ export default function App() {
   const content = useMemo(() => {
     switch (route.type) {
       case "home": return <HomePage registry={registry} />;
+      case "studio": return <Suspense fallback={<p role="status">Loading Studio guide…</p>}><StudioPage id={route.id} anchor={route.anchor}/></Suspense>;
       case "guide": return <GuidePage id={route.id as GuideId} />;
       case "api-index": return <ApiIndexPage registry={registry} />;
       case "api": return <NamespacePage registry={registry} namespace={route.namespace} item={route.item} />;
@@ -48,7 +52,7 @@ export default function App() {
 
   return <div className="app-shell">
     <div className={mobileNav ? "sidebar-wrap mobile-open" : "sidebar-wrap"}><div className="mobile-scrim" onClick={() => setMobileNav(false)} /><Sidebar registry={registry} route={route} onSearch={() => setSearchOpen(true)} /></div>
-    <div className="main-shell"><Topbar registry={registry} onSearch={() => setSearchOpen(true)} onMenu={() => setMobileNav(true)} /><main className="content-shell">{content}<footer className="site-footer"><span>Kinetix Studio · KX v{registry.version}</span><span>Canonical language documentation</span></footer></main></div>
+    <div className="main-shell"><Topbar registry={registry} onSearch={() => setSearchOpen(true)} onMenu={() => setMobileNav(true)} /><main className="content-shell">{content}<footer className="site-footer"><span>Kinetix Studio · KX v{registry.version}</span><span>Studio {catalog.studioVersion} · Language & application documentation</span></footer></main></div>
     <SearchPalette registry={registry} open={searchOpen} onClose={() => setSearchOpen(false)} />
   </div>;
 }

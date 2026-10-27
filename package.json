@@ -8,12 +8,17 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "sync:kx": "node scripts/sync-kx.mjs",
-    "sync:kx:check": "node scripts/sync-kx.mjs --check"
+    "sync:kx:check": "node scripts/sync-kx.mjs --check",
+    "test": "node scripts/sync-kx.test.mjs && node scripts/verify-docs.mjs",
+    "docs:check": "node scripts/verify-docs.mjs",
+    "docs:update": "npm run sync:kx && npm test && npm run build"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

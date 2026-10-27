@@ -1,0 +1,72 @@
+pipeline({
+  name: "Local OHLCV Data Pipeline"
+});
+
+// A directory path is allowed. With recursive:true Kinetix collects matching
+// files below the directory and DuckDB reads them as one logical table.
+const raw = data.read("data/raw/ohlcv", {
+  scope: "workspace",
+  format: "parquet",
+  recursive: true
+});
+
+const selected = data.select(raw, [
+  "timestamp", "symbol", "open", "high", "low", "close", "volume"
+]);
+
+const normalized = data.normalizeTime(selected, "timestamp", {
+  output: "time",
+  inputUnit: "auto"
+});
+
+const clean = data.dedupe(normalized, ["symbol", "time"], {
+  keep: "last",
+  orderBy: "time"
+});
+
+const validation = data.validate(clean, {
+  requiredColumns: ["symbol", "time", "open", "high", "low", "close", "volume"],
+  types: {
+    symbol: "string",
+    time: "number",
+    open: "number",
+    high: "number",
+    low: "number",
+    close: "number",
+    volume: "number"
+  },
+  timeColumn: "time",
+  duplicateBy: ["symbol", "time"],
+  open: "open",
+  high: "high",
+  low: "low",
+  close: "close"
+});
+console.log(validation);
+
+const saved = data.save(clean, {
+  name: "us_equities_1d_clean",
+  title: "US Equities Daily OHLCV — Clean",
+  path: "data/processed/ohlcv/us_equities_1d.parquet",
+  scope: "workspace",
+  format: "parquet",
+  compression: "zstd",
+  versioned: true,
+  kind: "ohlcv",
+  timeColumn: "time",
+  requiredColumns: ["symbol", "time", "open", "high", "low", "close", "volume"],
+  types: { symbol: "string", time: "number", close: "number" },
+  timezone: "UTC",
+  adjustmentMethod: "raw",
+  sourceProvider: "local_import",
+  roles: {
+    time: "time",
+    open: "open",
+    high: "high",
+    low: "low",
+    close: "close",
+    volume: "volume",
+    symbol: "symbol"
+  }
+});
+console.log(saved);

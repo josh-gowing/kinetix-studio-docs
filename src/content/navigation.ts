@@ -3,7 +3,7 @@ import type { GuideId } from "../types";
 export const guides: Array<{ id: GuideId; label: string; description: string }> = [
   { id: "getting-started", label: "Getting Started", description: "Write and run your first KX script." },
   { id: "language-basics", label: "Language Basics", description: "Series, scalars, control flow, missing values and collections." },
-  { id: "script-types", label: "Script Types", description: "Indicators, Studies, Strategies and Libraries." },
+  { id: "script-types", label: "Script Types", description: "Indicators, Studies, Strategies, Pipelines and Libraries." },
   { id: "data", label: "Data & Datasets", description: "Use chart data, Data Library datasets and other instruments." },
   { id: "strategies", label: "Strategies & Orders", description: "Entries, exits, sizing, broker state and deterministic execution." },
   { id: "multi-asset", label: "Multi-Asset Portfolios", description: "Shared capital, instrument routing and dynamic universes." },

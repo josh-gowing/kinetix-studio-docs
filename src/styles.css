@@ -243,3 +243,19 @@ kbd { border: 1px solid #343832; border-bottom-color: #43483f; background: #1d20
   .doc-intro h1 { font-size: 32px; }
   .site-footer { flex-direction: column; align-items: flex-start; justify-content: center; gap: 5px; }
 }
+
+/* The Studio manual shares the existing documentation typography. */
+.manual-toc { display: grid; gap: 5px; padding: 18px 22px; border: 1px solid var(--border, #29303a); border-radius: 8px; margin: 22px 0 32px; }
+.manual-toc strong { margin-bottom: 5px; }
+.manual-toc button { text-align: left; color: #aebdce; background: transparent; border: 0; padding: 4px 0; cursor: pointer; font: inherit; font-size: 13px; }
+.manual-toc button:hover { color: #fff; }
+.studio-manual h2, .studio-manual h3 { scroll-margin-top: 90px; }
+.manual-table { overflow-x: auto; margin: 22px 0; }
+.manual-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.manual-table th, .manual-table td { text-align: left; vertical-align: top; padding: 12px; border: 1px solid #29303a; line-height: 1.6; }
+.manual-table th { background: #151d28; }
+.manual-source { margin-top: 38px; padding-top: 20px; border-top: 1px solid #29303a; color: #8a9aaf; font-size: 12px; }
+.example-list button span { min-width: 0; overflow-wrap: anywhere; }
+.example-list small { display: block; margin-top: 4px; color: #7e8da2; font-size: 10px; }
+.example-title a { display: inline-block; margin-bottom: 16px; }
+.sidebar-footer { flex-wrap: wrap; gap: 8px; }
