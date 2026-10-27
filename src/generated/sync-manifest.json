@@ -21,6 +21,7 @@
     "public/examples/Shared Capital Portfolio v1.8.5.kx",
     "public/examples/Time Session Strategy v1.8.kx",
     "public/examples/index.json",
+    "public/examples/pipelines/daily-session-normalization.kx",
     "public/examples/v23/alpha-vantage-earnings.kx",
     "public/examples/v23/generic-http.kx",
     "public/examples/v23/lse-ohlcv-chunks.kx",

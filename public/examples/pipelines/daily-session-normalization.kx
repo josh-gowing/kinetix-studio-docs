@@ -1,0 +1,19 @@
+// Replace the source path, symbol and source snapshot cutoff before running.
+pipeline({ name: "Daily session preparation" });
+const raw = data.read("data/raw/daily.parquet", { scope: "workspace" });
+const daily = data.normalizeDailyOhlcv(raw, {
+    timeColumn: "time",
+    calendar: "XNYS",
+    timestampMeaning: "utc_date",
+    inputUnit: "ms",
+    asOf: 1773172800000,
+    publicationDelayMs: 60000
+});
+console.log(data.validate(daily, { timeColumn: "session_close" }));
+console.log(data.save(daily, {
+    name: "daily_prices",
+    path: "data/processed/daily_prices.parquet",
+    kind: "ohlcv",
+    symbol: "AAPL",
+    adjustmentMethod: "raw"
+}));

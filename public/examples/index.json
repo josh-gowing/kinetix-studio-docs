@@ -44,6 +44,10 @@
     "title": "Order Types Strategy"
   },
   {
+    "file": "pipelines/daily-session-normalization.kx",
+    "title": "pipelines/daily session normalization"
+  },
+  {
     "file": "Point In Time Events v1.8.6.kx",
     "title": "Point In Time Events v1.8.6"
   },

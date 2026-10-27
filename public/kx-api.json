@@ -758,6 +758,13 @@
         "kind": "function"
       },
       {
+        "label": "data.normalizeDailyOhlcv",
+        "insertText": "data.normalizeDailyOhlcv(${1:table}, { timeColumn: \"${2:time}\", calendar: \"XNYS\", timestampMeaning: \"utc_date\", asOf: ${3:sourceSnapshotEpochMs} })",
+        "detail": "data.normalizeDailyOhlcv(table, { timeColumn: \"time\", calendar: \"XNYS\", timestampMeaning: \"utc_date\", asOf: sourceSnapshotEpochMs )",
+        "documentation": "Normalize daily UTC vendor labels or actual instants using bundled XNYS regular sessions (1990–2035). Preserves source columns, adds session dates/open/close, availability, calendar classification and snapshot completion. asOf is the source snapshot cutoff, not preparation time. Save retains completion guards; incomplete/non-session rows cannot enter strategy timelines.",
+        "kind": "function"
+      },
+      {
         "label": "data.normalizeTime",
         "insertText": "data.normalizeTime(${1:table}, \"${2:timestamp}\", { output: \"${3:time}\", inputUnit: \"${4:auto}\" })",
         "detail": "data.normalizeTime(table, \"timestamp\", { output: \"time\", inputUnit: \"auto\" )",
@@ -2468,6 +2475,13 @@
       "insertText": "data.derive(${1:table}, \"${2:return}\", \"${3:close / lag(close) over (partition by symbol order by time) - 1}\")",
       "detail": "data.derive(table, \"return\", \"close / lag(close) over (partition by symbol order by time) - 1\")",
       "documentation": "Add a DuckDB-backed derived column. Administrative/file-reading SQL is blocked.",
+      "kind": "function"
+    },
+    {
+      "label": "data.normalizeDailyOhlcv",
+      "insertText": "data.normalizeDailyOhlcv(${1:table}, { timeColumn: \"${2:time}\", calendar: \"XNYS\", timestampMeaning: \"utc_date\", asOf: ${3:sourceSnapshotEpochMs} })",
+      "detail": "data.normalizeDailyOhlcv(table, { timeColumn: \"time\", calendar: \"XNYS\", timestampMeaning: \"utc_date\", asOf: sourceSnapshotEpochMs )",
+      "documentation": "Normalize daily UTC vendor labels or actual instants using bundled XNYS regular sessions (1990–2035). Preserves source columns, adds session dates/open/close, availability, calendar classification and snapshot completion. asOf is the source snapshot cutoff, not preparation time. Save retains completion guards; incomplete/non-session rows cannot enter strategy timelines.",
       "kind": "function"
     },
     {

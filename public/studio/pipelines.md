@@ -436,3 +436,64 @@ v1.6 propagates tick size / point value / currency into the MarketDataset used b
 ## Indicator datasets
 
 A reusable Indicator does not require a dataset declaration. Its bare OHLCV Series are resolved by the importing Study/Strategy. An optional `dataset: "..."` declaration binds an Indicator only for standalone execution/visual validation.
+
+
+## Exchange-aware daily OHLCV normalization
+
+Use `data.normalizeDailyOhlcv` for daily US equity vendor bars. This is separate from numeric timestamp conversion and fixed-interval resampling. It uses the bundled **XNYS regular-session calendar, 1990–2035**, without a network dependency. NYSE sessions normally open at 09:30 and close at 16:00 New York time, with holidays, exceptional closures and early closes from the bundled schedule. US daylight saving changes the UTC times. Future emergency closures require a calendar update.
+
+```kx
+pipeline({ name: "Daily session preparation" });
+const raw = data.read("data/raw/daily.parquet", { scope: "workspace" });
+const daily = data.normalizeDailyOhlcv(raw, {
+    timeColumn: "time",
+    calendar: "XNYS",
+    timestampMeaning: "utc_date",
+    inputUnit: "ms",
+    asOf: 1773172800000,
+    publicationDelayMs: 60000
+});
+console.log(data.validate(daily, { timeColumn: "session_close" }));
+console.log(data.save(daily, {
+    name: "daily_prices",
+    path: "data/processed/daily_prices.parquet",
+    kind: "ohlcv",
+    symbol: "AAPL",
+    adjustmentMethod: "raw"
+}));
+```
+
+**Set `asOf` to your source snapshot's actual cutoff in UTC epoch milliseconds.** The example uses 2026-03-10T20:00:00Z; replace it. It is not the current preparation time. A bar captured before its availability stays incomplete even if you run preparation tomorrow. Calendar close alone cannot prove vendor finality or account for late revisions: set a conservative `publicationDelayMs` and, if provided, `vendorAvailabilityColumn`. That optional column contains UTC timestamps or epoch milliseconds; availability is the later of vendor publication and session close plus delay. Vendor publication must describe the final daily record, not its first intraday update.
+
+Timestamp meaning must be explicit:
+
+- `utc_date`: the UTC calendar date identifies the vendor's trading session. The time-of-day is a label, not when the completed OHLCV was available. This is the initial policy for the tested LSE daily files; confirm vendor semantics before using a different source. A 13:00 UTC label does not make the daily close available at 13:00.
+- `instant`: map the actual UTC timestamp to its New York local date. This is not a roll-forward/roll-back convention for timestamps labelled after midnight. Select the mode matching the vendor contract.
+
+Temporal DATE/TIMESTAMP/TIMESTAMPTZ inputs are accepted; naive timestamps explicitly mean UTC in this operation. Clock-only TIME values and unparsed text are rejected. Numeric `inputUnit` is `ms` by default, or explicit `s`, `us`, `ns`; units are never guessed. DATE at midnight in instant mode maps to the prior New York date, so use `utc_date` for date labels.
+
+Every original input column, including the source timestamp, is preserved. Output columns are reserved:
+
+| Column | Meaning |
+| --- | --- |
+| `session_date` | Trading-session date, `YYYY-MM-DD` |
+| `session_open`, `session_close` | Regular-session boundaries, UTC epoch milliseconds |
+| `available_at` | Earliest completed-bar availability under the supplied publication policy |
+| `session_status` | `session`, `weekend` or `holiday` (includes exceptional closures) |
+| `session_index` | Ordinal of a trading session, for calendar-aware gap detection |
+| `is_complete` | Valid session with availability at or before the source snapshot cutoff |
+| `snapshot_asof` | Supplied source snapshot cutoff, preserved for audit |
+| `calendar_id` | Versioned bundled calendar identifier |
+
+Non-session rows remain in preview/output for audit, with no close/availability and `is_complete: false`; they are never moved to a neighbouring session. Null/invalid/out-of-range input timestamps fail with a diagnostic. Existing output-column collisions fail. After normalization, keep the safety columns intact: select/rename/derive/fill/resample operations that discard or modify them are rejected. Perform those transforms first. If numeric timestamps require conversion, write a new column rather than overwriting the vendor timestamp.
+
+Validation counts **missing trading sessions per `symbol`** between each instrument's observed first and last sessions. Rename a differently named ticker column to `symbol` first, or prepare one symbol at a time. Without a symbol column the table is treated as one instrument. Weekends, holidays, DST changes and early closes are not missing sessions. This checks internal gaps, not missing leading/trailing history outside the observed coverage.
+
+Save automatically registers `timeColumn: "session_close"`, `availabilityColumn: "available_at"`, timeframe `1D`, New York timezone, bar-close convention and the calendar completion policy. Standard OHLC column roles are inferred; custom names need explicit roles. Strategy/market activation clocks completed rows at `available_at`, sorts them and excludes non-session/incomplete rows; source rows stay available in the native preview. KX `data.dataset`, `data.market` and `data.security` use the same completed data. `data.dataset(..., { timeline: "event" })` cannot bypass the daily availability guard. Market activation requires a single instrument; filter a multi-symbol table before saving individual market datasets. Existing datasets are unchanged until explicitly normalized.
+
+In **Data Library → Prepare Data**, choose **Normalize daily trading sessions**, select the source timestamp column, choose its meaning and enter the source snapshot cutoff as an ISO UTC timestamp ending in `Z`. Optional numeric units, publication delay and vendor availability column are under Daily availability options. Add the step, update preview, validate, then save/register or generate KX. The UI selects the daily timeline fields automatically; generated KX reproduces the same operation.
+
+Normalized daily tables are rejected as intrabar execution datasets; use actual intraday OHLCV, trades or ticks for bar magnification. The existing broker next-bar fill model is unchanged. The daily completion clock does not reconstruct intraday execution timestamps.
+
+
+The registration role `"session_close": "time"` is intentional: it identifies the session timestamp, while the separate `availabilityColumn: "available_at"` governs observation. The original vendor timestamp remains a normal audit column with no competing time role. Saving replaces existing time-role assignments, so exactly one column has the `time` role. In strategy access the active clock is availability, which may be later than session close.
