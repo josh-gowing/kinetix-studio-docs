@@ -1,0 +1,49 @@
+pipeline({ name: "Batch daily session normalization" });
+
+// Start with these two instruments. Replace/extend the list for your universe.
+const symbols = ["MSFT", "NVDA"];
+const MAX_SYMBOLS = 2;
+// Replace with the actual source snapshot cutoff (UTC epoch milliseconds).
+const SOURCE_ASOF = 1792950300000;
+const successes = [];
+const failures = [];
+let attempted = 0;
+
+for (const symbol of symbols.slice(0, MAX_SYMBOLS)) {
+    attempted++;
+    try {
+        const raw = data.read("data/raw/" + symbol + ".parquet", { scope: "workspace", format: "parquet" });
+        const sessions = data.normalizeDailyOhlcv(raw, {
+            timeColumn: "time",
+            calendar: "XNYS",
+            timestampMeaning: "utc_date",
+            inputUnit: "ms",
+            asOf: SOURCE_ASOF,
+            publicationDelayMs: 0
+        });
+        // Native transforms do not promise implicit row order.
+        const normalized = data.sort(sessions, ["session_close"]);
+        const validation = data.validate(normalized, {
+            timeColumn: "session_close", open: "open", high: "high", low: "low", close: "close"
+        });
+        if (validation.status != "passed" || validation.checkedRows <= 0) {
+            throw { message: "Validation " + validation.status, symbol: symbol };
+        }
+        const saved = data.save(normalized, {
+            name: symbol + "_1D_NORMALIZED",
+            symbol: symbol,
+            kind: "ohlcv",
+            adjustmentMethod: "raw",
+            path: "data/processed/" + symbol + "_1D_NORMALIZED.parquet",
+            scope: "workspace", format: "parquet", compression: "zstd", versioned: true
+        });
+        successes.push({ symbol: symbol, id: saved.id, rows: saved.rows });
+        console.log("Saved " + symbol + ": " + saved.id);
+    } catch (error) {
+        failures.push({ symbol: symbol, message: error.message, operation: error.operation, line: error.line });
+        console.log("Failed " + symbol + " at " + error.operation + ": " + error.message);
+    }
+}
+console.log("Attempted: " + attempted + "; passed: " + successes.length + "; failed: " + failures.length);
+console.log(successes);
+console.log(failures);

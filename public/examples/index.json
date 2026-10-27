@@ -44,6 +44,10 @@
     "title": "Order Types Strategy"
   },
   {
+    "file": "pipelines/batch-daily-normalization-v2.5.kx",
+    "title": "pipelines/batch daily normalization v2.5"
+  },
+  {
     "file": "pipelines/daily-session-normalization.kx",
     "title": "pipelines/daily session normalization"
   },

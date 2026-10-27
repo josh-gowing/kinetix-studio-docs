@@ -18,6 +18,9 @@ assert(registry.items.some(item=>item.label==="data.normalizeDailyOhlcv"),"Daily
 assert(catalog.examples.some(e=>e.file==="pipelines/daily-session-normalization.kx"),"Daily-session recipe missing");
 assert(catalog.guides.find(g=>g.id==="visual-data").markdown.includes("source snapshot cutoff"),"Daily preparation instructions missing");
 assert(catalog.guides.find(g=>g.id==="pipelines").markdown.includes('"session_close": "time"'),"Session time/availability role explanation missing");
+assert(catalog.guides.some(g=>g.id==="batch-pipelines"&&g.markdown.includes("try/catch")),"Batch language guide missing");
+assert(registry.items.some(item=>item.label==="array.forEach"),"Sequential array iteration API missing");
+assert(catalog.examples.some(e=>e.file==="pipelines/batch-daily-normalization-v2.5.kx"),"Batch recipe missing");
 const manifest=JSON.parse(read("src/generated/sync-manifest.json"));
 for(const file of manifest.files)assert(fs.existsSync(path.join(root,file)),`Missing managed asset ${file}`);
 assert.deepEqual(JSON.parse(read("public/examples/index.json")),catalog.examples.map(({file,title})=>({file,title})));

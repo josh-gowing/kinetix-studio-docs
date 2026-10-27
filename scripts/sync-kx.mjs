@@ -9,6 +9,7 @@ export const references = [
   ["pipelines", "KX pipelines & native data engine", "DATA_ENGINE.md", "Read, join, transform, validate, save and register data."],
   ["connections", "Connections & downloads", "V2.3_CONNECTIONS.md", "Provider setup, secure keys, download jobs, cancellation and resume."],
   ["research-studio", "Research Studio", "RESEARCH_STUDIO.md", "Reports, reproducible runs, comparisons, sweeps and chronological windows."],
+  ["batch-pipelines", "Batch pipelines & language improvements", "V2.5_BATCH_PIPELINES.md", "Arrays, loops, per-instrument exceptions, diagnostics and sequential native batch workflows."],
   ["language-reference", "Language & runtime reference", "KX_LANGUAGE_FOUNDATION.md", "Detailed language, broker, portfolio and causal-data behavior."],
   ["integration", "Host integration", "INTEGRATION.md", "Embed Studio and connect workspace, data and chart services."]
 ];
@@ -37,7 +38,7 @@ export function collect(studioRoot, docsRoot) {
     if (!guide.id || !guide.title || !guide.description || !guide.markdown || guides.some(g => g.id === guide.id)) throw new Error(`Invalid or duplicate Studio guide: ${file}`);
     guides.push({ ...guide, source: `content/studio/${file}`, origin: "docs", sha256: hash(guide.markdown) });
   }
-  const order = ["overview", "desktop", "workspaces", "connections", "visual-data", "pipelines", "research-studio", "language-reference", "integration"];
+  const order = ["overview", "desktop", "workspaces", "connections", "visual-data", "pipelines", "batch-pipelines", "research-studio", "language-reference", "integration"];
   const rank = id => order.includes(id) ? order.indexOf(id) : order.length;
   guides.sort((a,b) => rank(a.id) - rank(b.id));
   const examples = files(path.join(studioRoot, "examples"), ".kx").map(file => {

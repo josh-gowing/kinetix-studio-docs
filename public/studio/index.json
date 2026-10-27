@@ -4,7 +4,7 @@
     "title": "Studio workflow & capabilities",
     "description": "Start here: choose the right script, workspace and data workflow.",
     "source": "content/studio/overview.json",
-    "sha256": "2557e008781843c585837ed73975633a64b210916c2752a4b71beff204f18456"
+    "sha256": "fee35b23ea072e1c746e6181f89496b2f921f251472dc2849709b6eeec3779bb"
   },
   {
     "id": "desktop",
@@ -39,7 +39,14 @@
     "title": "KX pipelines & native data engine",
     "description": "Read, join, transform, validate, save and register data.",
     "source": "DATA_ENGINE.md",
-    "sha256": "f9c8c90294800b6699c023fa455cc476e840e2f2382762cbad3c8cfca120941d"
+    "sha256": "5de05e3b41564a277be36fe4ed66bad76921f2225b933f54fd4a043dfe0f8322"
+  },
+  {
+    "id": "batch-pipelines",
+    "title": "Batch pipelines & language improvements",
+    "description": "Arrays, loops, per-instrument exceptions, diagnostics and sequential native batch workflows.",
+    "source": "V2.5_BATCH_PIPELINES.md",
+    "sha256": "bc1dbe342c1a4c1b79fac9720f4ff076bce95d05f3cfb0bd7f97f4af39879066"
   },
   {
     "id": "research-studio",
@@ -53,7 +60,7 @@
     "title": "Language & runtime reference",
     "description": "Detailed language, broker, portfolio and causal-data behavior.",
     "source": "KX_LANGUAGE_FOUNDATION.md",
-    "sha256": "ac2c2efd9b5c7431c25cee6c4e597cd66f00d4863b65e57728f1321edcc71b55"
+    "sha256": "283af0f803a167494e733deb0890cddd133263bbabd9375fdc6418662b2a2544"
   },
   {
     "id": "integration",

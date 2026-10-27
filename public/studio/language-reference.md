@@ -519,3 +519,8 @@ const events = data.dataset("date_only_events", { delay: "1d" });
 ```
 
 The delay changes the dataset observation timeline; it does not rewrite the original source row. This is useful for conservative date-only releases and other lagged information while preserving the raw/effective event timestamp for separate analysis.
+
+
+## KX 2.2 / Studio v2.5 batch pipelines
+
+Arrays support `.length`, zero-based indexing and instance methods such as `.push()`, `.includes()`, `.slice()` and awaited sequential `.forEach(namedFunction)`. Existing array.* functions remain supported. Use try/catch around each instrument to recover from ordinary native failures; catch exposes message, code, operation and source location. throw and finally are supported. Stop and execution limits remain fatal. See V2.5_BATCH_PIPELINES.md and examples/pipelines/batch-daily-normalization-v2.5.kx for the complete contract, compatibility boundaries and acceptance recipe.
