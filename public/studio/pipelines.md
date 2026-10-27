@@ -497,3 +497,8 @@ Normalized daily tables are rejected as intrabar execution datasets; use actual 
 
 
 The registration role `"session_close": "time"` is intentional: it identifies the session timestamp, while the separate `availabilityColumn: "available_at"` governs observation. The original vendor timestamp remains a normal audit column with no competing time role. Saving replaces existing time-role assignments, so exactly one column has the `time` role. In strategy access the active clock is availability, which may be later than session close.
+
+
+### Role-mapping validation
+
+Native saves validate caller roles before applying daily defaults and before writing a processed file or registering a version. Keys must be existing output column names, values must be supported semantic roles, and at most one column may have the `time` role. For example, use `roles: { session_close: "time", close: "close" }`; `roles: { time: "session_close" }` is reversed and produces a diagnostic showing the corrected mapping. Daily normalization can infer standard OHLC roles and assigns its session-close time role automatically, so omit explicit roles unless custom column names need them. Multiple columns with the general `value` role remain supported. Existing pinned files and registrations are not rewritten; correct a malformed recipe and save a new immutable registration.

@@ -803,7 +803,7 @@
         "label": "data.save",
         "insertText": "data.save(${1:table}, { name: \"${2:dataset_name}\", path: \"${3:./data/processed/output.parquet}\", kind: \"${4:custom}\", timeColumn: \"${5:time}\" })",
         "detail": "data.save(table, { name: \"dataset_name\", path: \"./data/processed/output.parquet\", kind: \"custom\", timeColumn: \"time\" )",
-        "documentation": "Write and register an immutable versioned output. Paths start at the chosen workspace/global root. Parquet defaults to ZSTD; CSV is uncompressed. Match the path extension to format. Existing registered versions and source files cannot be overwritten. The result includes fileLocation and an id for a pinned data.dataset reference.",
+        "documentation": "Write and register an immutable versioned output. Paths start at the chosen workspace/global root. Parquet defaults to ZSTD; CSV is uncompressed. Match the path extension to format. Existing registered versions and source files cannot be overwritten. Roles map existing output column names to supported roles (for example session_close: time); reversed mappings are rejected before writing. The result includes fileLocation and an id for a pinned data.dataset reference.",
         "kind": "function"
       }
     ],
@@ -2523,7 +2523,7 @@
       "label": "data.save",
       "insertText": "data.save(${1:table}, { name: \"${2:dataset_name}\", path: \"${3:./data/processed/output.parquet}\", kind: \"${4:custom}\", timeColumn: \"${5:time}\" })",
       "detail": "data.save(table, { name: \"dataset_name\", path: \"./data/processed/output.parquet\", kind: \"custom\", timeColumn: \"time\" )",
-      "documentation": "Write and register an immutable versioned output. Paths start at the chosen workspace/global root. Parquet defaults to ZSTD; CSV is uncompressed. Match the path extension to format. Existing registered versions and source files cannot be overwritten. The result includes fileLocation and an id for a pinned data.dataset reference.",
+      "documentation": "Write and register an immutable versioned output. Paths start at the chosen workspace/global root. Parquet defaults to ZSTD; CSV is uncompressed. Match the path extension to format. Existing registered versions and source files cannot be overwritten. Roles map existing output column names to supported roles (for example session_close: time); reversed mappings are rejected before writing. The result includes fileLocation and an id for a pinned data.dataset reference.",
       "kind": "function"
     },
     {

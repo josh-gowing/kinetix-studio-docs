@@ -39,7 +39,7 @@
     "title": "KX pipelines & native data engine",
     "description": "Read, join, transform, validate, save and register data.",
     "source": "DATA_ENGINE.md",
-    "sha256": "c4ef859ff20ae5b6f21322fa008fc1e54a32af16d05b876413bac719a3c0363b"
+    "sha256": "f9c8c90294800b6699c023fa455cc476e840e2f2382762cbad3c8cfca120941d"
   },
   {
     "id": "research-studio",
